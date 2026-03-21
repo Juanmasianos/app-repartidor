@@ -1,31 +1,38 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import Feather from '@expo/vector-icons/Feather';
+import { Colors } from '@/hooks/colors';
 
 export default function TabLayout() {
 
   return (
     <Tabs
       screenOptions={{
-        tabBarStyle: { backgroundColor: "#009B48" },
+        tabBarStyle: { backgroundColor: Colors.primary },
         headerShown: false,
       }}>
       <Tabs.Screen
-        name="index"
+        name="pedidos-pendientes"
         options={{
-          title: 'Home',
-          tabBarIcon: () => <IconSymbol size={28} name="house.fill" color={"#FED000"} />,
+          tabBarActiveTintColor: Colors.secondary,
+          tabBarInactiveTintColor: Colors.textSecondary,
+          tabBarIcon: () => <Feather name="shopping-cart" size={24} color={Colors.secondary} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="pedido"
         options={{
-          title: 'Explore',
-          tabBarIcon: () => <IconSymbol size={28} name="paperplane.fill" color={"#FED000"} />,
+          tabBarActiveTintColor: Colors.secondary,
+          tabBarInactiveTintColor: Colors.textSecondary,
+          tabBarIcon: () => <Feather name="shopping-cart" size={24} color={Colors.secondary} />,
+        }}
+      />
+      <Tabs.Screen
+        name="perfil"
+        options={{
+          tabBarActiveTintColor: Colors.secondary,
+          tabBarInactiveTintColor: Colors.textSecondary,
+          tabBarIcon: () => <Feather name="user" size={24} color={Colors.secondary} />,
         }}
       />
     </Tabs>

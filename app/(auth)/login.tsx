@@ -30,7 +30,8 @@ export default function LoginScreen() {
           />
         </View>
         <View style={styles.card}>
-          <Text style={styles.title}>Iniciar sesión</Text>
+          <Text style={styles.title}>Repartidores</Text>
+          <Text style={styles.subtitle}> Iniciar sesión</Text>
 
           <Text style={styles.label}>Email</Text>
           <TextInput
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     marginBottom: 20,
-    color: "black",
+    color: "#FFC107",
     fontWeight: "bold",
   },
   label: { marginBottom: 5, color: "black", fontWeight: "bold" },
@@ -129,5 +130,11 @@ const styles = StyleSheet.create({
   switchLink: {
     fontWeight: "bold",
     color: "#FFC107",
+  },
+  subtitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
