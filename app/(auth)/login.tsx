@@ -56,7 +56,7 @@ export default function LoginScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.replace("/(tabs)/pedido" as any)}
+            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
           >
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>

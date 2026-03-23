@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const pedidosPendientes = () => {
+const pendingOrders = () => {
   return (
     <View>
       <Text>pedidos-pendientes</Text>
@@ -9,6 +9,6 @@ const pedidosPendientes = () => {
   )
 }
 
-export default pedidosPendientes
+export default pendingOrders
 
 const styles = StyleSheet.create({})

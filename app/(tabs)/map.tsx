@@ -1,3 +1,4 @@
+import { Colors } from "@/hooks/colors";
 import { useRouter } from "expo-router";
 import {
   Dimensions,
@@ -215,8 +216,8 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 17,
     fontWeight: "bold",
-    color: "#FFC107",
-    backgroundColor: "#2E7D32",
+    color: Colors.primary,
+    backgroundColor: Colors.secondary,
     paddingVertical: 10,
     paddingHorizontal: 16,
     marginHorizontal: 16,
@@ -230,11 +231,11 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: "#388E3C",
+    backgroundColor: Colors.secondary,
     borderRadius: 12,
     padding: 14,
     borderWidth: 2,
-    borderColor: "#FFC107",
+    borderColor: Colors.primary,
   },
   cardHeader: {
     flexDirection: "row",
@@ -304,12 +305,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   ctaAsignado: {
-    backgroundColor: "#0A8F3E",
+    backgroundColor: Colors.secondary,
     borderWidth: 2,
-    borderColor: "#FFC107",
+    borderColor: Colors.primary,
   },
   ctaAceptado: {
-    backgroundColor: "#FFC107",
+    backgroundColor: Colors.primary,
   },
   ctaText: {
     fontSize: 14,

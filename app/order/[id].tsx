@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from "expo-router";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const items = [
@@ -9,7 +10,10 @@ const items = [
   { id: 6 },
 ];
 
-export default function PedidoScreen() {
+export default function OrderScreen() {
+
+  const { id } = useLocalSearchParams();
+
   return (
     <View style={styles.wrapper}>
       {/* Header */}
@@ -20,18 +24,16 @@ export default function PedidoScreen() {
           resizeMode="contain"
         />
       </View>
-
-      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-        <View style={styles.card}>
-          {/* Info pedido */}
-          <View style={styles.infoBox}>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>ID Pedido</Text>
-              <Text style={styles.infoLabel}>Fecha</Text>
-            </View>
-            <Text style={styles.infoEstado}>Estado</Text>
+      <View style={styles.card}>
+        {/* Info pedido */}
+        <View style={styles.infoBox}>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>ID Pedido</Text>
+            <Text style={styles.infoLabel}>Fecha</Text>
           </View>
-
+          <Text style={styles.infoEstado}>Estado</Text>
+        </View>
+        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
           {/* Lista de productos */}
           {items.map((item) => (
             <View key={item.id} style={styles.productRow}>
@@ -45,14 +47,13 @@ export default function PedidoScreen() {
               <Text style={styles.productDetail}>Precio/Peso</Text>
             </View>
           ))}
+        </ScrollView>
+        {/* Total */}
+        <Text style={styles.total}>Total pedido</Text>
+      </View>
 
-          {/* Total */}
-          <Text style={styles.total}>Total pedido</Text>
-        </View>
-
-        <View style={{ height: 20 }} />
-      </ScrollView>
-    </View>
+      <View style={{ height: 20 }} />
+    </View >
   );
 }
 
