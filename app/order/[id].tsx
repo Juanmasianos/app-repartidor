@@ -1,18 +1,17 @@
+import ProductLine from "@/components/ProductLine";
+import { productsMocks } from "@/mocks/productsMock";
+import { Product } from "@/models/product";
 import { useLocalSearchParams } from "expo-router";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-
-const items = [
-  { id: 1 },
-  { id: 2 },
-  { id: 3 },
-  { id: 4 },
-  { id: 5 },
-  { id: 6 },
-];
+import { Pedido, PEDIDOS_ACEPTADOS } from "../(tabs)/map";
 
 export default function OrderScreen() {
 
+  const items: Product[] = productsMocks;
+
   const { id } = useLocalSearchParams();
+
+  const pedido = PEDIDOS_ACEPTADOS.find((p) => p.id === id);
 
   return (
     <View style={styles.wrapper}>
@@ -28,24 +27,21 @@ export default function OrderScreen() {
         {/* Info pedido */}
         <View style={styles.infoBox}>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>ID Pedido</Text>
-            <Text style={styles.infoLabel}>Fecha</Text>
+            <Text style={styles.infoLabel}>ID Pedido: </Text>
+            <Text style={styles.infoLabel}>Fecha: </Text>
           </View>
-          <Text style={styles.infoEstado}>Estado</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>{id}</Text>
+            <Text style={styles.infoLabel}>{pedido!.fechaEntrega}</Text>
+          </View>
+          <Text style={styles.infoEstado}>Estado: No puesto</Text>
         </View>
+
         <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
           {/* Lista de productos */}
-          {items.map((item) => (
-            <View key={item.id} style={styles.productRow}>
-              <Image
-                source={require("@/assets/images/cerezas.png")}
-                style={styles.productImage}
-                resizeMode="contain"
-              />
-              <Text style={styles.productName}>Nombre</Text>
-              <Text style={styles.productDetail}>Cantidad</Text>
-              <Text style={styles.productDetail}>Precio/Peso</Text>
-            </View>
+          {items.map((item: Product) => (
+            <ProductLine key={item.id} item={item} >
+            </ProductLine>
           ))}
         </ScrollView>
         {/* Total */}
@@ -109,30 +105,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#222",
     textAlign: "center",
-  },
-  productRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#3a9e68",
-    borderRadius: 14,
-    padding: 10,
-    marginBottom: 8,
-    gap: 8,
-  },
-  productImage: {
-    width: 36,
-    height: 36,
-  },
-  productName: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#fff",
-    flex: 1,
-  },
-  productDetail: {
-    fontSize: 12,
-    color: "#fff",
-    marginLeft: 4,
   },
   total: {
     fontSize: 16,

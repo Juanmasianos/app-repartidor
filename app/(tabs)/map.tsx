@@ -14,7 +14,7 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const CARD_WIDTH = SCREEN_WIDTH;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type Pedido = {
+export type Pedido = {
   id: string;
   fechaEntrega: string;
   ubicacion: string;
@@ -39,7 +39,7 @@ const PEDIDOS_ASIGNADOS: Pedido[] = [
   },
 ];
 
-const PEDIDOS_ACEPTADOS: Pedido[] = [
+export const PEDIDOS_ACEPTADOS: Pedido[] = [
   {
     id: "PED-00119",
     fechaEntrega: "17/03/2026",
@@ -146,7 +146,7 @@ export default function HomeScreen() {
   const router = useRouter();
 
   const handleCardPress = (order: Pedido) => {
-    router.push(`/(tabs)/detalle?id=${order.id}` as any);
+    router.push(`/order/${order.id}` as any);
   };
 
   return (
