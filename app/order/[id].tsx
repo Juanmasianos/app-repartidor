@@ -1,9 +1,9 @@
 import ProductLine from "@/components/ProductLine";
+import { PEDIDOS_ACEPTADOS } from "@/mocks/ordersMock";
 import { productsMocks } from "@/mocks/productsMock";
 import { Product } from "@/models/product";
 import { useLocalSearchParams } from "expo-router";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Pedido, PEDIDOS_ACEPTADOS } from "../(tabs)/map";
 
 export default function OrderScreen() {
 
@@ -12,6 +12,8 @@ export default function OrderScreen() {
   const { id } = useLocalSearchParams();
 
   const pedido = PEDIDOS_ACEPTADOS.find((p) => p.id === id);
+
+
 
   return (
     <View style={styles.wrapper}>
@@ -37,8 +39,7 @@ export default function OrderScreen() {
           <Text style={styles.infoEstado}>Estado: No puesto</Text>
         </View>
 
-        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-          {/* Lista de productos */}
+        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={true}>
           {items.map((item: Product) => (
             <ProductLine key={item.id} item={item} >
             </ProductLine>
@@ -83,6 +84,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginHorizontal: 16,
     marginBottom: 16,
+    minHeight: 450
   },
   infoBox: {
     backgroundColor: "#fff",
