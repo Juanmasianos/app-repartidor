@@ -32,7 +32,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="perfil"
+          name="profile"
           options={{
             tabBarActiveTintColor: Colors.secondary,
             tabBarInactiveTintColor: Colors.textSecondary,

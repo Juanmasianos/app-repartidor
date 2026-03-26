@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function PerfilScreen() {
+export default function ProfileScreen() {
   const router = useRouter();
 
   return (
