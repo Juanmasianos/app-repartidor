@@ -56,20 +56,10 @@ export default function LoginScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.replace("/(tabs)/home" as any)}
+            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
           >
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
-
-          <Text style={styles.switchText}>
-            ¿No tienes cuenta?{" "}
-            <Text
-              style={styles.switchLink}
-              onPress={() => router.push("/(tabs)/" as any)}
-            >
-              Regístrate
-            </Text>
-          </Text>
         </View>
       </View>
     </ImageBackground>

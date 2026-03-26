@@ -1,35 +1,45 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import Feather from '@expo/vector-icons/Feather';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Colors } from '@/hooks/colors';
+import { View } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    <>
+      <Tabs
+        screenOptions={{
+          tabBarStyle: { backgroundColor: Colors.primary },
+          headerShown: false,
+        }}>
+        <Tabs.Screen
+          name="pending-orders"
+          options={{
+            title: 'Pedidos Pendientes',
+            tabBarActiveTintColor: Colors.secondary,
+            tabBarInactiveTintColor: Colors.textSecondary,
+            tabBarIcon: () => <MaterialCommunityIcons name="truck-delivery-outline" size={28} color={Colors.secondary} />,
+          }}
+        />
+        <Tabs.Screen
+          name="map"
+          options={{
+            tabBarActiveTintColor: Colors.secondary,
+            tabBarInactiveTintColor: Colors.textSecondary,
+            tabBarIcon: () => <Feather name="map-pin" size={24} color={Colors.secondary} />,
+          }}
+        />
+        <Tabs.Screen
+          name="profile"
+          options={{
+            tabBarActiveTintColor: Colors.secondary,
+            tabBarInactiveTintColor: Colors.textSecondary,
+            tabBarIcon: () => <Feather name="user" size={24} color={Colors.secondary} />,
+          }}
+        />
+      </Tabs>
+    </>
   );
 }

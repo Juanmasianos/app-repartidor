@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function PerfilScreen() {
+export default function ProfileScreen() {
   const router = useRouter();
 
   return (
@@ -41,21 +41,21 @@ export default function PerfilScreen() {
         <View style={styles.separation}>
           <TouchableOpacity
             style={styles.buttonOne}
-            onPress={() => router.replace("/(tabs)/home" as any)}
+            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
           >
             <Text style={styles.buttonText}>Editar información</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.buttonTwo}
-            onPress={() => router.replace("/(tabs)/home" as any)}
+            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
           >
             <Text style={styles.buttonText}>Ir a pedidos {">"}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.buttonThree}
-            onPress={() => router.replace("/(tabs)/home" as any)}
+            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
           >
             <Text style={styles.buttonText}>Dar de baja</Text>
           </TouchableOpacity>
