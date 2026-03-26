@@ -1,10 +1,8 @@
 import { Section } from "@/components/Section";
-import { Colors } from "@/hooks/colors";
 import { PEDIDOS_ACEPTADOS, PEDIDOS_ASIGNADOS } from "@/mocks/ordersMock";
 import { Pedido } from "@/models/Order";
 import { useRouter } from "expo-router";
-import { Image, ScrollView, StyleSheet, View,} from "react-native";
-
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 export default function PendingOrdersScreen() {
   const router = useRouter();
 
