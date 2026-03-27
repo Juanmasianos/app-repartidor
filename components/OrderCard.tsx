@@ -1,7 +1,7 @@
 import { CARD_WIDTH } from "@/app/constants/width";
 import { OrderCardProps } from "@/app/types/OrderCardProps";
 import { Colors } from "@/hooks/colors";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function OrderCard({ order, type, onPress }: OrderCardProps) {
   const isAsignado = type === "asignado";
@@ -44,7 +44,12 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
         onPress={() => onPress(order)}
         activeOpacity={0.8}
       >
-        <Text style={styles.ctaText}>
+        <Text
+          style={[
+            styles.ctaText,
+            isAsignado ? styles.ctaTextAsignado : styles.ctaTextAceptado,
+          ]}
+        >
           {isAsignado ? "Aceptar envío" : "Ver detalles del envío"}
         </Text>
       </TouchableOpacity>
@@ -53,8 +58,8 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
 }
 
 const styles = StyleSheet.create({
-     card: {
-    backgroundColor: Colors.secondary,
+  card: {
+    backgroundColor: Colors.cardBG,
     borderRadius: 12,
     padding: 14,
     borderWidth: 2,
@@ -69,7 +74,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontSize: 11,
-    color: "rgba(255,255,255,0.75)",
+    color: Colors.primary,
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 0.4,
@@ -77,10 +82,9 @@ const styles = StyleSheet.create({
   },
   fieldValue: {
     fontSize: 13,
-    color: "#FFFFFF",
+    color: Colors.textPrimary,
     fontWeight: "bold",
   },
-
   arrowIndicator: {
     width: 28,
     height: 28,
@@ -91,18 +95,16 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   arrowText: {
-    color: "#FFFFFF",
+    color: Colors.textPrimary,
     fontSize: 22,
     fontWeight: "bold",
     lineHeight: 26,
   },
-
   divider: {
     height: 1,
     backgroundColor: "rgba(255,255,255,0.25)",
     marginVertical: 10,
   },
-
   locationRow: {
     marginBottom: 12,
   },
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 12,
-    color: "#FFFFFF",
+    color: Colors.textPrimary,
     flex: 1,
   },
   ctaButton: {
@@ -134,9 +136,14 @@ const styles = StyleSheet.create({
   ctaAceptado: {
     backgroundColor: Colors.primary,
   },
+  ctaTextAsignado: {
+    color: Colors.primary,
+  },
+  ctaTextAceptado: {
+    color: Colors.textPrimary,
+  },
   ctaText: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#FFFFFF",
   },
 });
