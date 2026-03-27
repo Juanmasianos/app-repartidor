@@ -135,6 +135,8 @@ const styles = StyleSheet.create({
   },
   ctaAceptado: {
     backgroundColor: Colors.primary,
+    borderWidth: 2,
+    borderColor: Colors.textPrimary,
   },
   ctaTextAsignado: {
     color: Colors.primary,

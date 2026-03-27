@@ -1,4 +1,4 @@
-import { PEDIDOS_ACEPTADOS, PEDIDOS_ASIGNADOS } from "@/mocks/ordersMock";
+import { PEDIDOS_ACEPTADOS } from "@/mocks/ordersMock";
 import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
@@ -38,14 +38,13 @@ export default function MapScreen() {
   }
 
   const allOrders = [
-    ...PEDIDOS_ASIGNADOS.map((p) => ({ ...p, tipo: "asignado" })),
     ...PEDIDOS_ACEPTADOS.map((p) => ({ ...p, tipo: "aceptado" })),
   ];
 
   const markersJS = allOrders
     .filter((p) => p.coordenadas)
     .map((p) => {
-      const color = p.tipo === "asignado" ? "#f97316" : "#16a34a";
+      const color = "#16a34a";
       return `
         (function() {
           var color = '${color}';
@@ -135,10 +134,6 @@ export default function MapScreen() {
       />
 
       <View style={styles.legend}>
-        {/* <View style={styles.legendItem}>
-          <View style={[styles.dot, { backgroundColor: "#f97316" }]} />
-          <Text style={styles.legendText}>Asignado</Text>
-        </View> */}
         <View style={styles.legendItem}>
           <View style={[styles.dot, { backgroundColor: "#16a34a" }]} />
           <Text style={styles.legendText}>Aceptado</Text>
