@@ -45,16 +45,24 @@ export default function MapScreen() {
   const markersJS = allOrders
     .filter((p) => p.coordenadas)
     .map((p) => {
-      const color = p.tipo === "asignado" ? "orange" : "green";
+      const color = p.tipo === "asignado" ? "#f97316" : "#16a34a";
       return `
-        L.marker([${p.coordenadas!.latitude}, ${p.coordenadas!.longitude}], {
-          icon: L.divIcon({
-            className: '',
-            html: '<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.4)"></div>',
-            iconSize: [14, 14],
-            iconAnchor: [7, 7],
-          })
-        }).addTo(map).bindPopup('<b>Pedido ${p.id}</b><br/>${p.ubicacion}');
+        (function() {
+          var color = '${color}';
+          var svg = "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='40' viewBox='0 0 28 40'>"
+            + "<path d='M14 0C6.27 0 0 6.27 0 14c0 9.625 14 26 14 26S28 23.625 28 14C28 6.27 21.73 0 14 0z' fill='" + color + "'/>"
+            + "<circle cx='14' cy='14' r='6' fill='white'/>"
+            + "</svg>";
+          L.marker([${p.coordenadas!.latitude}, ${p.coordenadas!.longitude}], {
+            icon: L.divIcon({
+              className: '',
+              html: svg,
+              iconSize: [28, 40],
+              iconAnchor: [14, 40],
+              popupAnchor: [0, -40],
+            })
+          }).addTo(map).bindPopup('<b>Pedido ${p.id}</b><br/>${p.ubicacion}');
+        })();
       `;
     })
     .join("\n");
@@ -80,13 +88,19 @@ export default function MapScreen() {
           attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Marcador de ubicación actual
+        // Marcador de ubicación actual (pin azul)
+        var blueSvg = "<svg xmlns='http://www.w3.org/2000/svg' width='28' height='40' viewBox='0 0 28 40'>"
+          + "<path d='M14 0C6.27 0 0 6.27 0 14c0 9.625 14 26 14 26S28 23.625 28 14C28 6.27 21.73 0 14 0z' fill='#2563EB'/>"
+          + "<circle cx='14' cy='14' r='6' fill='white'/>"
+          + "</svg>";
+
         L.marker([${location.lat}, ${location.lng}], {
           icon: L.divIcon({
             className: '',
-            html: '<div style="width:16px;height:16px;border-radius:50%;background:#2563EB;border:3px solid white;box-shadow:0 0 6px rgba(0,0,0,0.5)"></div>',
-            iconSize: [16, 16],
-            iconAnchor: [8, 8],
+            html: blueSvg,
+            iconSize: [28, 40],
+            iconAnchor: [14, 40],
+            popupAnchor: [0, -40],
           })
         }).addTo(map).bindPopup('<b>Tu ubicación</b>');
 
@@ -121,12 +135,12 @@ export default function MapScreen() {
       />
 
       <View style={styles.legend}>
-        <View style={styles.legendItem}>
-          <View style={[styles.dot, { backgroundColor: "orange" }]} />
+        {/* <View style={styles.legendItem}>
+          <View style={[styles.dot, { backgroundColor: "#f97316" }]} />
           <Text style={styles.legendText}>Asignado</Text>
-        </View>
+        </View> */}
         <View style={styles.legendItem}>
-          <View style={[styles.dot, { backgroundColor: "green" }]} />
+          <View style={[styles.dot, { backgroundColor: "#16a34a" }]} />
           <Text style={styles.legendText}>Aceptado</Text>
         </View>
         <View style={styles.legendItem}>
