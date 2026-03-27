@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     padding: 8,
     alignItems: "center",
   },
-  errorText: { color: "#92400E", fontSize: 13 },
+  errorText: { color: "#db7e7e", fontSize: 13 },
   map: { flex: 1 },
   legend: {
     flexDirection: "row",

@@ -52,11 +52,11 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    backgroundColor: "#FFFFFF",
+    // backgroundColor: "#FFFFFF",
     paddingVertical: 10,
     paddingHorizontal: 16,
 
-    alignItems: "flex-start",
+    // alignItems: "flex-start",
   },
   headerLogo: {
     width: 130,
