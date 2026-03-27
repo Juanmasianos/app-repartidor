@@ -1,3 +1,4 @@
+import { login } from "@/services/login-service";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -14,6 +15,12 @@ export default function LoginScreen() {
   const router = useRouter();
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+
+  const loginFunction = async () => {
+
+    login(loginEmail, loginPassword)
+
+  }
 
   return (
     <ImageBackground
@@ -56,7 +63,11 @@ export default function LoginScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
+            onPress={(e) => 
+
+              loginFunction()
+              
+            }
           >
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
