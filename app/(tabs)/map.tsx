@@ -120,19 +120,42 @@ export default function MapScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
-  loadingText: { marginTop: 12, color: "#0A8F3E", fontSize: 16 },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  loadingText: {
+    marginTop: 12,
+    color: "#0A8F3E",
+    fontSize: 16,
+  },
   header: {
     backgroundColor: "#fff",
     paddingVertical: 10,
     paddingHorizontal: 16,
     alignItems: "flex-start",
   },
-  headerLogo: { width: 130, height: 80 },
-  errorBanner: { backgroundColor: "#FEF3C7", padding: 8, alignItems: "center" },
-  errorText: { color: "#db7e7e", fontSize: 13 },
-  map: { flex: 1 },
+  headerLogo: {
+    width: 130,
+    height: 80,
+  },
+  errorBanner: {
+    backgroundColor: "#FEF3C7",
+    padding: 8,
+    alignItems: "center",
+  },
+  errorText: {
+    color: "#db7e7e",
+    fontSize: 13,
+  },
+  map: {
+    flex: 1,
+  },
   legend: {
     flexDirection: "row",
     justifyContent: "center",
