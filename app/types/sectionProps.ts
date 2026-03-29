@@ -5,4 +5,5 @@ export type SectionProps = {
   orders: Pedido[];
   type: "asignado" | "aceptado";
   onCardPress: (order: Pedido) => void;
+  onAccept?: (order: Pedido) => void;
 };

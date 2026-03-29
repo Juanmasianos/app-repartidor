@@ -2,9 +2,18 @@ import { Section } from "@/components/Section";
 import { PEDIDOS_ACEPTADOS, PEDIDOS_ASIGNADOS } from "@/mocks/ordersMock";
 import { Pedido } from "@/models/Order";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 import { Image, ScrollView, StyleSheet, View } from "react-native";
+
 export default function PendingOrdersScreen() {
   const router = useRouter();
+  const [asignados, setAsignados] = useState<Pedido[]>(PEDIDOS_ASIGNADOS);
+  const [aceptados, setAceptados] = useState<Pedido[]>(PEDIDOS_ACEPTADOS);
+
+  const handleAccept = (order: Pedido) => {
+    setAsignados((prev) => prev.filter((p) => p.id !== order.id));
+    setAceptados((prev) => [order, ...prev]);
+  };
 
   const handleCardPress = (order: Pedido) => {
     router.push(`/order/${order.id}` as any);
@@ -12,7 +21,6 @@ export default function PendingOrdersScreen() {
 
   return (
     <View style={styles.background}>
-      {/* ── Header con logo ── */}
       <View style={styles.header}>
         <Image
           source={require("@/assets/images/coplaca.png")}
@@ -20,8 +28,6 @@ export default function PendingOrdersScreen() {
           resizeMode="contain"
         />
       </View>
-
-      {/* ── Contenido ── */}
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
@@ -29,13 +35,14 @@ export default function PendingOrdersScreen() {
       >
         <Section
           title="Pedidos Asignados"
-          orders={PEDIDOS_ASIGNADOS}
+          orders={asignados}
           type="asignado"
           onCardPress={handleCardPress}
+          onAccept={handleAccept}
         />
         <Section
           title="Pedidos Aceptados"
-          orders={PEDIDOS_ACEPTADOS}
+          orders={aceptados}
           type="aceptado"
           onCardPress={handleCardPress}
         />
@@ -44,25 +51,19 @@ export default function PendingOrdersScreen() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-
   header: {
-    // backgroundColor: "#FFFFFF",
     paddingVertical: 10,
     paddingHorizontal: 16,
-
-    // alignItems: "flex-start",
   },
   headerLogo: {
     width: 130,
     height: 80,
   },
-
   scroll: {
     flex: 1,
   },

@@ -3,12 +3,18 @@ import { OrderCardProps } from "@/app/types/OrderCardProps";
 import { Colors } from "@/hooks/colors";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export function OrderCard({ order, type, onPress }: OrderCardProps) {
+export function OrderCard({ order, type, onPress, onAccept }: OrderCardProps) {
   const isAsignado = type === "asignado";
 
+  const handleCTA = () => {
+    if (isAsignado && onAccept) {
+      onAccept(order);
+    } else {
+      onPress(order);
+    }
+  };
   return (
     <View style={[styles.card, { width: CARD_WIDTH }]}>
-      {/* Header row */}
       <View style={styles.cardHeader}>
         <View style={styles.cardField}>
           <Text style={styles.fieldLabel}>ID Pedido</Text>
@@ -41,7 +47,7 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
           styles.ctaButton,
           isAsignado ? styles.ctaAsignado : styles.ctaAceptado,
         ]}
-        onPress={() => onPress(order)}
+        onPress={handleCTA}
         activeOpacity={0.8}
       >
         <Text
