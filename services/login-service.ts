@@ -7,5 +7,5 @@ export const login = async (email: string, password: string) => {
     password: password
   };
 
-  return await postData('login', loginData); 
+  return await postData('auth/login', loginData); 
 };

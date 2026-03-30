@@ -18,7 +18,13 @@ export default function LoginScreen() {
 
   const loginFunction = async () => {
 
-    login(loginEmail, loginPassword)
+    login(loginEmail, loginPassword).then((response) => {
+      if (response) {
+        router.replace("/(tabs)/pending-orders" as any);
+      } else {
+        alert("Error al iniciar sesión");
+      }
+    });
 
   }
 
@@ -63,11 +69,11 @@ export default function LoginScreen() {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={(e) => 
+            onPress={(e) => {
 
-              loginFunction()
+              loginFunction();
               
-            }
+            }}
           >
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
