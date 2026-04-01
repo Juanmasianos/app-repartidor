@@ -70,9 +70,9 @@ export default function OrderScreen() {
             <Text style={styles.infoLabel}>Fecha Entrega: </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{order.id}</Text>
-            <Text style={styles.infoLabel}>
-              {order.estimatedDeliveryTime || "Pendiente"}
+            <Text style={styles.infoValue}>{order.orderNumber}</Text>
+            <Text style={styles.infoValue}>
+              {order.estimatedDeliveryTime ? new Date(order.estimatedDeliveryTime).toLocaleDateString() : "N/A"}
             </Text>
           </View>
           <Text style={styles.infoEstado}>Estado: {order.status}</Text>
@@ -140,13 +140,21 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     marginBottom: 8,
   },
   infoLabel: {
     fontSize: 15,
     fontWeight: "bold",
     color: "#222",
+    flex: 1,
+    
+  },
+  infoValue: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#222",
+    flex: 1,
+    textAlign: "center",
   },
   infoEstado: {
     fontSize: 15,

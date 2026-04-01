@@ -12,11 +12,11 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
       <View style={styles.cardHeader}>
         <View style={styles.cardField}>
           <Text style={styles.fieldLabel}>ID Pedido</Text>
-          <Text style={styles.fieldValue}>{order.id}</Text>
+          <Text style={styles.fieldValue}>{order.orderNumber}</Text>
         </View>
         <View style={styles.cardField}>
           <Text style={styles.fieldLabel}>Fecha de{"\n"}entrega aproximada</Text>
-          <Text style={styles.fieldValue}>{order.estimatedDeliveryTime}</Text>
+          <Text style={styles.fieldValue}>{order.estimatedDeliveryTime ? new Date(order.estimatedDeliveryTime).toLocaleDateString() : "N/A"}</Text>
         </View>
         <View style={styles.arrowIndicator}>
           <Text style={styles.arrowText}>›</Text>
@@ -70,6 +70,9 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 11,
     color: "rgba(255,255,255,0.75)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+    textShadowColor: Colors.primary,
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 0.4,
@@ -78,6 +81,9 @@ const styles = StyleSheet.create({
   fieldValue: {
     fontSize: 13,
     color: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+    textShadowColor: "#000000",
     fontWeight: "bold",
   },
 
@@ -118,6 +124,9 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 12,
     color: "#FFFFFF",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+    textShadowColor: "#000000",
     flex: 1,
   },
   ctaButton: {

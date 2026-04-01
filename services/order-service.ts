@@ -9,7 +9,7 @@ export const getOrdersByDeliverer = async () => {
     const currentUserId = await authService.getUserId();
     const response = await getData(`${currentApiVersion}${ordersMapping}/delivery-agent/${currentUserId}`) as any;
 
-    const orders = Array.isArray(response) ? response : (response?.data || []);
+    const orders = Array.isArray(response) ? response : response.data.data; 
 
     console.log("Pedidos extraídos para la UI:", orders.length);
     return orders as Order[];
@@ -25,7 +25,7 @@ export const getOrdersByDeliverer = async () => {
 export const getOrderById = async (id: string): Promise<Order | null> => {
   try {
     const response = await getData(`${currentApiVersion}${ordersMapping}/${id}`) as any;
-    return response?.data || null;
+    return response?.data.data || null;
   } catch (error) {
     console.error("Error al obtener detalle:", error);
     return null;
