@@ -15,8 +15,8 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
           <Text style={styles.fieldValue}>{order.id}</Text>
         </View>
         <View style={styles.cardField}>
-          <Text style={styles.fieldLabel}>Fecha de{"\n"}entrega</Text>
-          <Text style={styles.fieldValue}>{order.fechaEntrega}</Text>
+          <Text style={styles.fieldLabel}>Fecha de{"\n"}entrega aproximada</Text>
+          <Text style={styles.fieldValue}>{order.estimatedDeliveryTime}</Text>
         </View>
         <View style={styles.arrowIndicator}>
           <Text style={styles.arrowText}>›</Text>
@@ -30,7 +30,7 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
         <Text style={styles.fieldLabel}>Ubicacion</Text>
         <View style={styles.locationValueRow}>
           <Text style={styles.locationText} numberOfLines={1}>
-            {order.ubicacion}
+            {order.deliveryAddressId}
           </Text>
         </View>
       </View>
@@ -53,7 +53,7 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
 }
 
 const styles = StyleSheet.create({
-     card: {
+  card: {
     backgroundColor: Colors.secondary,
     borderRadius: 12,
     padding: 14,

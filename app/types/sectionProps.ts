@@ -1,8 +1,8 @@
-import { Pedido } from "@/models/Order";
+import { Order } from "../../models/Order";
 
 export type SectionProps = {
   title: string;
-  orders: Pedido[];
+  orders: Order[];
   type: "asignado" | "aceptado";
-  onCardPress: (order: Pedido) => void;
+  onCardPress: (order: Order) => void;
 };

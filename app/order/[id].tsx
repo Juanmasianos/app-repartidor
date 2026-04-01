@@ -1,19 +1,38 @@
 import ProductLine from "@/components/ProductLine";
+import { Colors } from "@/hooks/colors";
 import { PEDIDOS_ACEPTADOS } from "@/mocks/ordersMock";
 import { productsMocks } from "@/mocks/productsMock";
+import { Order } from "@/models/Order";
 import { Product } from "@/models/product";
+import { getOrderById } from "@/services/order-service";
 import { useLocalSearchParams } from "expo-router";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function OrderScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const items: Product[] = productsMocks;
+  useEffect(() => {
+    const fetchDetail = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const data = await getOrderById(id);
+        setOrder(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDetail();
+  }, [id]);
 
-  const { id } = useLocalSearchParams();
-
-  const pedido = PEDIDOS_ACEPTADOS.find((p) => p.id === id);
-
-
+  if (loading) return <ActivityIndicator size="large" style={{flex: 1}} color={Colors.primary} />;
+  
+  if (!order) return <View style={styles.wrapper}><Text>No se encontró el pedido</Text></View>;
 
   return (
     <View style={styles.wrapper}>
@@ -25,32 +44,48 @@ export default function OrderScreen() {
           resizeMode="contain"
         />
       </View>
+
       <View style={styles.card}>
         {/* Info pedido */}
         <View style={styles.infoBox}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>ID Pedido: </Text>
-            <Text style={styles.infoLabel}>Fecha: </Text>
+            <Text style={styles.infoLabel}>Fecha Entrega: </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{id}</Text>
-            <Text style={styles.infoLabel}>{pedido!.fechaEntrega}</Text>
+            <Text style={styles.infoLabel}>{order.id}</Text>
+            <Text style={styles.infoLabel}>
+              {order.estimatedDeliveryTime || "Pendiente"}
+            </Text>
           </View>
-          <Text style={styles.infoEstado}>Estado: No puesto</Text>
+          <Text style={styles.infoEstado}>Estado: {order.status}</Text>
         </View>
 
         <ScrollView style={styles.scroll} showsVerticalScrollIndicator={true}>
-          {items.map((item: Product) => (
-            <ProductLine key={item.id} item={item} >
-            </ProductLine>
+          {/* Mapeamos los productos que vienen DENTRO del objeto order */}
+          {order.items?.map((item: any) => (
+            <ProductLine key={item.id} item={item} />
           ))}
         </ScrollView>
-        {/* Total */}
-        <Text style={styles.total}>Total pedido</Text>
+        
+        {/* Total (Calculado o desde la API) */}
+        <Text style={styles.total}>
+          Total pedido: {order.totalPrice ? `${order.totalPrice}€` : "N/A"}
+        </Text>
       </View>
 
+      <Pressable 
+        style={[styles.ctaButton, order.status === "DELIVERED" && { opacity: 0.5 }]} 
+        onPress={() => alert("Función no implementada")}
+        disabled={order.status === "DELIVERED"}
+      >
+        <Text style={styles.ctaText}>
+          {order.status === "DELIVERED" ? "Entregado" : "Marcar como entregado"}
+        </Text>
+      </Pressable>
+
       <View style={{ height: 20 }} />
-    </View >
+    </View>
   );
 }
 
@@ -114,5 +149,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     marginTop: 8,
+  },  
+  ctaButton: {
+    borderRadius: 30,
+    paddingVertical: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  ctaText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
 });

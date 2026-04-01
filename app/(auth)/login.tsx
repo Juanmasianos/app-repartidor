@@ -1,3 +1,4 @@
+import { authService } from "@/services/auth-service";
 import { login } from "@/services/login-service";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -18,11 +19,18 @@ export default function LoginScreen() {
 
   const loginFunction = async () => {
 
-    login(loginEmail, loginPassword).then((response) => {
-      if (response) {
-        router.replace("/(tabs)/pending-orders" as any);
-      } else {
-        alert("Error al iniciar sesión");
+    login(loginEmail, loginPassword).then(async (response) => {
+      try {
+        const isOk = await login(loginEmail, loginPassword);
+
+        if (isOk) {
+          router.replace("/(tabs)/pending-orders");
+        } else {
+          alert("Error: El servidor no respondió con un token válido.");
+        }
+      } catch (error: any) {
+        const msg = error.response?.data?.message || "Credenciales incorrectas o error de red";
+        alert(msg);
       }
     });
 
@@ -72,7 +80,7 @@ export default function LoginScreen() {
             onPress={(e) => {
 
               loginFunction();
-              
+
             }}
           >
             <Text style={styles.buttonText}>Entrar</Text>

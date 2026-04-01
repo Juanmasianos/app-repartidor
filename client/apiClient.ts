@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { router } from 'expo-router';
-import { authService } from '../services/authService'
+import { authService } from '../services/auth-service'
 
 const BASE_URL = 'http://192.168.1.137:8080/';
 
@@ -21,6 +21,7 @@ api.interceptors.request.use(
     }
 
     const token = await authService.getToken();
+    console.log("Token enviado:", token ? "SÍ" : "NO HAY TOKEN");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,25 +32,30 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    return response.data;
+    return response;
   },
   (error) => {
     if (error.response) {
-      console.log(`Error ${error.response.status}:`, error.response.data);
-      if (error.response) {
-        console.log("Datos del error de Spring:", error.response.data);
-        return Promise.reject(error.response.data);
-      }
-      if (error.response.status === 401) {
-        console.warn("Sesión expirada");
+      const status = error.response.status;
+      const data = error.response.data;
+
+      console.log(`Error del servidor [${status}]:`, data);
+
+      if (status === 401) {
+        console.warn("Sesión expirada o no autorizada");
         router.replace('/(auth)/login');
       }
+
+      return Promise.reject(error); 
+    } 
+    
+    if (error.request) {
+      console.error("No se pudo conectar con el servidor. Revisa la IP y la red.");
     } else {
-      console.log("Error de red o servidor no disponible");
+      console.error("Error de configuración en la petición:", error.message);
     }
 
     return Promise.reject(error);
-  }
-);
+});
 
 export default api;
