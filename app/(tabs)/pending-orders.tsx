@@ -1,8 +1,9 @@
 import { Section } from "@/components/Section";
 import { Colors } from "@/hooks/colors";
+import { MOCK_ORDERS } from "@/mocks/ordersMock";
 import { Order } from "@/models/Order";
 import { authService } from "@/services/auth-service";
-import { getOrdersByDeliverer } from "@/services/order-service";
+import { acceptOrder, getOrdersByDeliverer } from "@/services/order-service";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View, } from "react-native";
@@ -10,35 +11,47 @@ import { ActivityIndicator, Image, ScrollView, StyleSheet, View, } from "react-n
 export default function PendingOrdersScreen() {
   const router = useRouter();
 
-  const handleCardPress = (order: Order) => {
-    router.push(`/order/${order.id}` as any);
-  };
-
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState<Order[]>([]);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      setLoading(true);
-      try {
-        const data = await getOrdersByDeliverer();
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const data = await getOrdersByDeliverer();
 
-        if (Array.isArray(data)) {
-          setOrders(data);
-        } else {
-          console.warn("La API no devolvió un array, devolvió:", typeof data);
-          setOrders([]);
-        }
-      } catch (error) {
-        console.error("Error cargando pedidos en el componente:", error);
+      //mock
+      //const data = MOCK_ORDERS;
+      if (Array.isArray(data)) {
+        setOrders(data);
+      } else {
+        console.warn("La API no devolvió un array, devolvió:", typeof data);
         setOrders([]);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error cargando pedidos:", error);
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchOrders();
   }, []);
+
+  const handleCardPress = async (order: Order, type: string) => {
+    if (type === "asignado") {
+      try {
+        await acceptOrder(order.id.toString());
+        alert("¡Pedido aceptado! Ahora aparecerá en la sección de Aceptados.");
+        fetchOrders();
+      } catch (error) {
+        alert("No se pudo aceptar el pedido.");
+      }
+    } else {
+      router.push(`/order/${order.id}` as any);
+    }
+  };
 
   if (loading) return <ActivityIndicator size="large" color={Colors.primary} style={{ flex: 1 }} />;
 

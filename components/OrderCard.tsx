@@ -41,7 +41,7 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
           styles.ctaButton,
           isAsignado ? styles.ctaAsignado : styles.ctaAceptado,
         ]}
-        onPress={() => onPress(order)}
+        onPress={() => onPress(order, type)}
         activeOpacity={0.8}
       >
         <Text style={styles.ctaText}>

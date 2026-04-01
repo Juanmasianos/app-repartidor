@@ -1,11 +1,11 @@
 import ProductLine from "@/components/ProductLine";
 import { Colors } from "@/hooks/colors";
-import { PEDIDOS_ACEPTADOS } from "@/mocks/ordersMock";
+import { MOCK_ORDERS } from "@/mocks/ordersMock";
 import { productsMocks } from "@/mocks/productsMock";
 import { Order } from "@/models/Order";
 import { Product } from "@/models/product";
-import { getOrderById } from "@/services/order-service";
-import { useLocalSearchParams } from "expo-router";
+import { deliverOrder, getOrderById } from "@/services/order-service";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -20,6 +20,9 @@ export default function OrderScreen() {
       setLoading(true);
       try {
         const data = await getOrderById(id);
+
+        // mock
+        //const data = MOCK_ORDERS.find(o => o.id.toString() === id) || null;
         setOrder(data);
       } catch (error) {
         console.error(error);
@@ -30,8 +33,22 @@ export default function OrderScreen() {
     fetchDetail();
   }, [id]);
 
-  if (loading) return <ActivityIndicator size="large" style={{flex: 1}} color={Colors.primary} />;
-  
+  const handleDeliver = async () => {
+    if (!order) return;
+
+    try {
+      await deliverOrder(order.id.toString());
+      alert("Pedido entregado con éxito");
+      router.back(); 
+    } catch (error) {
+      alert("Error al procesar la entrega");
+    }
+  };
+
+
+
+  if (loading) return <ActivityIndicator size="large" style={{ flex: 1 }} color={Colors.primary} />;
+
   if (!order) return <View style={styles.wrapper}><Text>No se encontró el pedido</Text></View>;
 
   return (
@@ -67,21 +84,15 @@ export default function OrderScreen() {
             <ProductLine key={item.id} item={item} />
           ))}
         </ScrollView>
-        
+
         {/* Total (Calculado o desde la API) */}
         <Text style={styles.total}>
           Total pedido: {order.totalPrice ? `${order.totalPrice}€` : "N/A"}
         </Text>
       </View>
 
-      <Pressable 
-        style={[styles.ctaButton, order.status === "DELIVERED" && { opacity: 0.5 }]} 
-        onPress={() => alert("Función no implementada")}
-        disabled={order.status === "DELIVERED"}
-      >
-        <Text style={styles.ctaText}>
-          {order.status === "DELIVERED" ? "Entregado" : "Marcar como entregado"}
-        </Text>
+      <Pressable style={styles.ctaButton} onPress={handleDeliver}>
+        <Text style={styles.ctaText}>Marcar como entregado</Text>
       </Pressable>
 
       <View style={{ height: 20 }} />
@@ -149,7 +160,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     marginTop: 8,
-  },  
+  },
   ctaButton: {
     borderRadius: 30,
     paddingVertical: 12,

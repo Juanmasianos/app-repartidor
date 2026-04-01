@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
 import { Product } from '@/models/product'
+import { OrderItemDTO } from '@/models/Order'
 
-const ProductLine = ({ item }: { item: Product }) => {
+const ProductLine = ({ item }: { item: OrderItemDTO }) => {
     return (
         <View key={item.id} style={styles.productRow}>
             {/* <Image
@@ -10,9 +11,9 @@ const ProductLine = ({ item }: { item: Product }) => {
                 style={styles.productImage}
                 resizeMode="contain"
             /> */}
-            <Text style={styles.productName}>{item.name}</Text>
+            <Text style={styles.productName}>{item.productName}</Text>
             <Text style={styles.productDetail}>Cantidad: {item.quantity}</Text>
-            <Text style={styles.productDetail}>Precio/Peso: ${item.price.toFixed(2)}</Text>
+            <Text style={styles.productDetail}>Precio/Peso: ${item.unitPrice.toFixed(2)}</Text>
         </View>
     )
 }
