@@ -1,3 +1,4 @@
+// lo que hay que sacar es lo que hay dentro del User.ts
 export interface UserDTO {
   id: string;
   firstName: string;
