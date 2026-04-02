@@ -1,14 +1,33 @@
 import { CARD_WIDTH } from "@/app/constants/width";
 import { OrderCardProps } from "@/app/types/OrderCardProps";
 import { Colors } from "@/hooks/colors";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { AddressDTO } from "@/models/User";
+import { getOrderAddress } from "@/services/address-service";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export function OrderCard({ order, type, onPress }: OrderCardProps) {
   const isAsignado = type === "asignado";
 
+  const [customerAddress, setCustomerAddress] = useState<AddressDTO | null>(null);
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        const address = await getOrderAddress(order.customerId);
+        setCustomerAddress(address);
+      } catch (error) {
+        console.error("Error fetching customer address:", error);
+      }
+    };
+
+    fetchAddress();
+  }, [order.customerId]);
+
+
   return (
     <View style={[styles.card, { width: CARD_WIDTH }]}>
-      {/* Header row */}
       <View style={styles.cardHeader}>
         <View style={styles.cardField}>
           <Text style={styles.fieldLabel}>ID Pedido</Text>
@@ -44,7 +63,12 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
         onPress={() => onPress(order, type)}
         activeOpacity={0.8}
       >
-        <Text style={styles.ctaText}>
+        <Text
+          style={[
+            styles.ctaText,
+            isAsignado ? styles.ctaTextAsignado : styles.ctaTextAceptado,
+          ]}
+        >
           {isAsignado ? "Aceptar envío" : "Ver detalles del envío"}
         </Text>
       </TouchableOpacity>
@@ -80,13 +104,9 @@ const styles = StyleSheet.create({
   },
   fieldValue: {
     fontSize: 13,
-    color: "#FFFFFF",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
-    textShadowColor: "#000000",
+    color: Colors.textPrimary,
     fontWeight: "bold",
   },
-
   arrowIndicator: {
     width: 28,
     height: 28,
@@ -97,18 +117,16 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   arrowText: {
-    color: "#FFFFFF",
+    color: Colors.textPrimary,
     fontSize: 22,
     fontWeight: "bold",
     lineHeight: 26,
   },
-
   divider: {
     height: 1,
     backgroundColor: "rgba(255,255,255,0.25)",
     marginVertical: 10,
   },
-
   locationRow: {
     marginBottom: 12,
   },
@@ -123,10 +141,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 12,
-    color: "#FFFFFF",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
-    textShadowColor: "#000000",
+    color: Colors.textPrimary,
     flex: 1,
   },
   ctaButton: {
@@ -142,10 +157,21 @@ const styles = StyleSheet.create({
   },
   ctaAceptado: {
     backgroundColor: Colors.primary,
+    borderWidth: 2,
+    borderColor: Colors.textPrimary,
+  },
+  ctaTextAsignado: {
+    color: Colors.primary,
+  },
+  ctaTextAceptado: {
+    color: Colors.textPrimary,
   },
   ctaText: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#FFFFFF",
   },
 });
+function getAddressById(customerId: number) {
+  throw new Error("Function not implemented.");
+}
+

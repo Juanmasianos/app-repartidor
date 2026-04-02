@@ -43,7 +43,7 @@ export const MOCK_ORDERS: Order[] = [
     orderNumber: "ORD-2024-002",
     customerId: 51,
     warehouseId: 1,
-    status: 'SHIPPED', // Aparecerá en "Pedidos Aceptados"
+    status: 'ACCEPTED', // Aparecerá en "Pedidos Aceptados"
     totalPrice: 25.00,
     subtotal: 20.00,
     discount: 0,

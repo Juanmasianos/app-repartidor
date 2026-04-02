@@ -57,7 +57,7 @@ export default function ProfileScreen() {
             style={styles.buttonThree}
             onPress={() => router.replace("/(tabs)/pending-orders" as any)}
           >
-            <Text style={styles.buttonText}>Dar de baja</Text>
+            <Text style={styles.buttonText}>Cerrar sesión</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -81,14 +81,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: "#0A8F3E",
   },
+  // headerLeft: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   gap: 8,
+  // },
   headerLeft: {
-    flexDirection: "row",
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    gap: 8,
   },
   headerLogo: {
-    width: 40,
-    height: 40,
+    width: 80,
+    height: 80,
   },
   headerTitle: {
     fontSize: 22,
@@ -108,7 +113,9 @@ const styles = StyleSheet.create({
 
   pedidoBox: {
     margin: 16,
-    backgroundColor: "#FFC107",
+    backgroundColor: "#ffe186",
+    borderColor: "black",
+    borderWidth: 2,
     borderRadius: 20,
     padding: 20,
     height: 600,

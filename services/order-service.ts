@@ -1,7 +1,7 @@
 import { currentApiVersion, ordersMapping } from '@/app/constants/apiConstants';
 import { Order } from '../models/Order';
 import { authService } from './auth-service';
-import { getData, postData, putData } from './data-service';
+import { getData, putData } from './data-service';
 
 export const getOrdersByDeliverer = async () => {
 

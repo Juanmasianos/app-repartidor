@@ -6,7 +6,9 @@ import { authService } from "@/services/auth-service";
 import { acceptOrder, getOrdersByDeliverer } from "@/services/order-service";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View, } from "react-native";
+import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, TouchableOpacity, View, } from "react-native";
+import Feather from '@expo/vector-icons/Feather';
+import { AddressDTO } from "@/models/User";
 
 export default function PendingOrdersScreen() {
   const router = useRouter();
@@ -57,16 +59,17 @@ export default function PendingOrdersScreen() {
 
   return (
     <View style={styles.background}>
-      {/* ── Header con logo ── */}
       <View style={styles.header}>
         <Image
           source={require("@/assets/images/coplaca.png")}
           style={styles.headerLogo}
           resizeMode="contain"
         />
+        <TouchableOpacity onPress={fetchOrders} 
+            style={styles.refreshButton}>
+          <Feather name="refresh-cw" size={20} color={Colors.textPrimary} />
+        </TouchableOpacity>
       </View>
-
-      {/* ── Contenido ── */}
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
@@ -89,25 +92,22 @@ export default function PendingOrdersScreen() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
 const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-
   header: {
-    backgroundColor: "#FFFFFF",
     paddingVertical: 10,
     paddingHorizontal: 16,
-
-    alignItems: "flex-start",
+    marginTop: 20,
+    flexDirection: "row",
+    justifyContent:"space-between",
   },
   headerLogo: {
     width: 130,
     height: 80,
   },
-
   scroll: {
     flex: 1,
   },
@@ -115,4 +115,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingBottom: 32,
   },
+  refreshButton: {
+    marginTop: 25,
+    marginRight: 30,
+    backgroundColor: Colors.primary,
+    padding: 20,
+    borderRadius: 40,
+  }
 });
