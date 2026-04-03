@@ -1,7 +1,9 @@
 // voy a necesitar un get y un put
-// import {} from "./data-service";
-import api from "../client/apiClient";
+// import { getData, putData } from "./data-service";
+// import api from "../client/apiClient";
+// import { UserDTO } from "../models/User";
 import { UserDTO } from "../models/User";
+import { getData, putData } from "./data-service";
 
 export interface UpdateUserRequest {
   firstName: string;
@@ -20,19 +22,17 @@ export interface UpdateUserRequest {
     additionalInfo?: string;
   };
 }
-export const getUsers = async (): Promise<UserDTO[]> => {
-  const response = await api.get<UserDTO[]>("/users");
-  return response.data;
-};
 
 export const userService = {
-  getUsers,
   getUserById: async (id: string): Promise<UserDTO> => {
-    const response = await api.get<UserDTO>(`/users/${id}`);
-    return response.data;
+    return await getData<UserDTO>(`/users/${id}`);
   },
+
   updateUser: async (id: string, data: UpdateUserRequest): Promise<UserDTO> => {
-    const response = await api.put<UserDTO>(`/users/${id}`, data);
-    return response.data;
+    return await putData<UserDTO>(`/users/${id}`, data);
   },
+};
+
+export const getUsers = async (): Promise<UserDTO[]> => {
+  return await getData<UserDTO[]>(`/users`);
 };
