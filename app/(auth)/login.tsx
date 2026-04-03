@@ -9,11 +9,39 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { loginDeliveryUser } from "@/services/deliveryApi";
 
 export default function LoginScreen() {
   const router = useRouter();
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async (): Promise<void> => {
+    setError("");
+
+    if (!loginEmail.trim() || !loginPassword.trim()) {
+      setError("Introduce email y contraseña.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await loginDeliveryUser(loginEmail.trim(), loginPassword);
+
+      if (!response.roles?.includes("DELIVERY")) {
+        setError("Esta app solo admite cuentas de repartidor.");
+        return;
+      }
+
+      router.replace("/(tabs)/pending-orders" as any);
+    } catch (loginError) {
+      setError(loginError instanceof Error ? loginError.message : "No se pudo iniciar sesion.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <ImageBackground
@@ -54,11 +82,14 @@ export default function LoginScreen() {
             secureTextEntry
           />
 
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
+            onPress={handleLogin}
+            disabled={loading}
           >
-            <Text style={styles.buttonText}>Entrar</Text>
+            <Text style={styles.buttonText}>{loading ? "Accediendo..." : "Entrar"}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -121,6 +152,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  errorText: {
+    color: "#FFF3B0",
+    marginBottom: 10,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   switchText: {
     textAlign: "center",
