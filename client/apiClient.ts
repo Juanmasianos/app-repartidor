@@ -1,22 +1,20 @@
-import axios from 'axios';
-import { router } from 'expo-router';
-import { authService } from '../services/auth-service'
+import axios from "axios";
+import { router } from "expo-router";
+import { authService } from "../services/auth-service";
 
-const BASE_URL = 'http://192.168.1.137:8080/';
-
+const BASE_URL = "http://192.168.1.132:8080/";
 const api = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,
   headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    "Content-Type": "application/json",
+    Accept: "application/json",
   },
 });
 
 api.interceptors.request.use(
-
   async (config) => {
-    if (config.url!.includes('/auth/login')) {
+    if (config.url!.includes("/auth/login")) {
       return config;
     }
 
@@ -27,7 +25,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
@@ -43,19 +41,22 @@ api.interceptors.response.use(
 
       if (status === 401) {
         console.warn("Sesión expirada o no autorizada");
-        router.replace('/(auth)/login');
+        router.replace("/(auth)/login");
       }
 
-      return Promise.reject(error); 
-    } 
-    
+      return Promise.reject(error);
+    }
+
     if (error.request) {
-      console.error("No se pudo conectar con el servidor. Revisa la IP y la red.");
+      console.error(
+        "No se pudo conectar con el servidor. Revisa la IP y la red.",
+      );
     } else {
       console.error("Error de configuración en la petición:", error.message);
     }
 
     return Promise.reject(error);
-});
+  },
+);
 
 export default api;
