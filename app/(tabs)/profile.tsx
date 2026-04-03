@@ -1,9 +1,52 @@
+import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { clearSessionToken, getCurrentDeliveryUser } from "@/services/deliveryApi";
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const [profile, setProfile] = useState<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    warehouseName?: string;
+    deliveryStatus?: string;
+  } | null>(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadProfile = async (): Promise<void> => {
+      try {
+        const currentUser = await getCurrentDeliveryUser();
+
+        if (!isMounted) {
+          return;
+        }
+
+        setProfile(currentUser);
+      } catch (loadError) {
+        if (!isMounted) {
+          return;
+        }
+
+        setError(loadError instanceof Error ? loadError.message : "No se pudo cargar el perfil.");
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleLogout = (): void => {
+    clearSessionToken();
+    router.replace("/(auth)/login" as any);
+  };
 
   return (
     <View style={styles.wrapper}>
@@ -29,13 +72,15 @@ export default function ProfileScreen() {
           />
           <Text style={styles.textpedido}> ¡Aquí tienes tu espacio!</Text>
         </View>
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <View style={styles.textpedidoOne}>
-          <Text style={styles.textpedido}>Nombre:-</Text>
-          <Text style={styles.textpedido}>Apellidos:-</Text>
+          <Text style={styles.textpedido}>Nombre: {profile?.firstName || "-"}</Text>
+          <Text style={styles.textpedido}>Apellidos: {profile?.lastName || "-"}</Text>
         </View>
         <View style={styles.textpedidoOne}>
-          <Text style={styles.textpedido}>Email:-</Text>
-          <Text style={styles.textpedido}>Ubicación:-</Text>
+          <Text style={styles.textpedido}>Email: {profile?.email || "-"}</Text>
+          <Text style={styles.textpedido}>Almacén: {profile?.warehouseName || "Sin asignar"}</Text>
+          <Text style={styles.textpedido}>Estado: {profile?.deliveryStatus || "Sin estado"}</Text>
         </View>
 
         <View style={styles.separation}>
@@ -55,9 +100,9 @@ export default function ProfileScreen() {
 
           <TouchableOpacity
             style={styles.buttonThree}
-            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
+            onPress={handleLogout}
           >
-            <Text style={styles.buttonText}>Dar de baja</Text>
+            <Text style={styles.buttonText}>Cerrar sesión</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -126,6 +171,12 @@ const styles = StyleSheet.create({
   textpedidoOne: {
     paddingTop: 20,
     padding: 20,
+  },
+  errorText: {
+    color: "#7a0000",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginTop: 10,
   },
   separation: {
     marginTop: 40,
