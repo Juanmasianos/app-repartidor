@@ -1,4 +1,3 @@
-import { authService } from "@/services/auth-service";
 import { login } from "@/services/login-service";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -18,23 +17,20 @@ export default function LoginScreen() {
   const [loginPassword, setLoginPassword] = useState("");
 
   const loginFunction = async () => {
-
-    login(loginEmail, loginPassword).then(async (response) => {
-      try {
-        const isOk = await login(loginEmail, loginPassword);
-
-        if (isOk) {
-          router.replace("/(tabs)/pending-orders");
-        } else {
-          alert("Error: El servidor no respondió con un token válido.");
-        }
-      } catch (error: any) {
-        const msg = error.response?.data?.message || "Credenciales incorrectas o error de red";
-        alert(msg);
+    try {
+      const isOk = await login(loginEmail, loginPassword);
+      if (isOk) {
+        router.replace("/(tabs)/pending-orders");
+      } else {
+        alert("Error: El servidor no respondió con un token válido.");
       }
-    });
-
-  }
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message ||
+        "Credenciales incorrectas o error de red";
+      alert(msg);
+    }
+  };
 
   return (
     <ImageBackground
@@ -53,7 +49,6 @@ export default function LoginScreen() {
         <View style={styles.card}>
           <Text style={styles.title}>Repartidores</Text>
           <Text style={styles.subtitle}> Iniciar sesión</Text>
-
           <Text style={styles.label}>Email</Text>
           <TextInput
             placeholder="Tu email"
@@ -64,7 +59,6 @@ export default function LoginScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
           />
-
           <Text style={styles.label}>Contraseña</Text>
           <TextInput
             placeholder="*************"
@@ -74,15 +68,7 @@ export default function LoginScreen() {
             placeholderTextColor="#999"
             secureTextEntry
           />
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={(e) => {
-
-              loginFunction();
-
-            }}
-          >
+          <TouchableOpacity style={styles.button} onPress={loginFunction}>
             <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
         </View>
