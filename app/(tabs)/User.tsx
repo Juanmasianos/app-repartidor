@@ -1,4 +1,4 @@
-import { Section } from "@/components/Section";
+import { UserSection } from "@/components/UserSection";
 import { Colors } from "@/hooks/colors";
 import { UserDTO } from "@/models/User";
 import { getUsers } from "@/services/user-service";
@@ -14,7 +14,6 @@ import {
 
 export default function UsersScreen() {
   const router = useRouter();
-
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<UserDTO[]>([]);
 
@@ -22,7 +21,6 @@ export default function UsersScreen() {
     setLoading(true);
     try {
       const data = await getUsers();
-
       if (Array.isArray(data)) {
         setUsers(data);
       } else {
@@ -63,16 +61,14 @@ export default function UsersScreen() {
           resizeMode="contain"
         />
       </View>
-
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <Section
+        <UserSection
           title="Lista de Usuarios"
           data={users}
-          type="user"
           onCardPress={handleCardPress}
         />
       </ScrollView>
@@ -85,23 +81,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
-
   header: {
     backgroundColor: "#FFFFFF",
     paddingVertical: 10,
     paddingHorizontal: 16,
     alignItems: "flex-start",
   },
-
   headerLogo: {
     width: 130,
     height: 80,
   },
-
   scroll: {
     flex: 1,
   },
-
   scrollContent: {
     paddingVertical: 16,
     paddingBottom: 32,
