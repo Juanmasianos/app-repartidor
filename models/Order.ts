@@ -1,3 +1,5 @@
+import { AddressDTO } from "./User";
+
 export type OrderItemDTO = {
   id: number;
   productId: number;
@@ -7,7 +9,7 @@ export type OrderItemDTO = {
   subtotal: number;   // BigDecimal -> number
 };
 
-export type OrderStatus = 'PENDING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'ASSIGNED' | 'ACCEPTED' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED';
 
 export type Order = {
   id: number;
@@ -22,9 +24,9 @@ export type Order = {
   items: OrderItemDTO[]; 
   deliveryAgentId: number;
   deliveryAgentName: string;
-  deliveryAddressId: number;
+  deliveryAddress: AddressDTO;
   estimatedDeliveryTime: string;
-  actualDeliveryTime?: string; // El '?' significa que puede ser null
+  actualDeliveryTime?: string; 
   paymentMethod: string;
   paymentStatus: string;
   createdAt: string;

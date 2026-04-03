@@ -1,22 +1,24 @@
 import { CARD_WIDTH } from "@/app/constants/width";
 import { OrderCardProps } from "@/app/types/OrderCardProps";
 import { Colors } from "@/hooks/colors";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { AddressDTO } from "@/models/User";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export function OrderCard({ order, type, onPress }: OrderCardProps) {
   const isAsignado = type === "asignado";
 
   return (
     <View style={[styles.card, { width: CARD_WIDTH }]}>
-      {/* Header row */}
       <View style={styles.cardHeader}>
         <View style={styles.cardField}>
           <Text style={styles.fieldLabel}>ID Pedido</Text>
-          <Text style={styles.fieldValue}>{order.id}</Text>
+          <Text style={styles.fieldValue}>{order.orderNumber}</Text>
         </View>
         <View style={styles.cardField}>
           <Text style={styles.fieldLabel}>Fecha de{"\n"}entrega aproximada</Text>
-          <Text style={styles.fieldValue}>{order.estimatedDeliveryTime}</Text>
+          <Text style={styles.fieldValue}>{order.estimatedDeliveryTime ? new Date(order.estimatedDeliveryTime).toLocaleDateString() : "N/A"}</Text>
         </View>
         <View style={styles.arrowIndicator}>
           <Text style={styles.arrowText}>›</Text>
@@ -30,7 +32,7 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
         <Text style={styles.fieldLabel}>Ubicacion</Text>
         <View style={styles.locationValueRow}>
           <Text style={styles.locationText} numberOfLines={1}>
-            {order.deliveryAddressId}
+            {order.deliveryAddress.street} {order.deliveryAddress.streetNumber}, {order.deliveryAddress.city}
           </Text>
         </View>
       </View>
@@ -44,7 +46,12 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
         onPress={() => onPress(order, type)}
         activeOpacity={0.8}
       >
-        <Text style={styles.ctaText}>
+        <Text
+          style={[
+            styles.ctaText,
+            isAsignado ? styles.ctaTextAsignado : styles.ctaTextAceptado,
+          ]}
+        >
           {isAsignado ? "Aceptar envío" : "Ver detalles del envío"}
         </Text>
       </TouchableOpacity>
@@ -70,6 +77,9 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 11,
     color: "rgba(255,255,255,0.75)",
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+    textShadowColor: Colors.primary,
     fontWeight: "bold",
     textTransform: "uppercase",
     letterSpacing: 0.4,
@@ -77,10 +87,9 @@ const styles = StyleSheet.create({
   },
   fieldValue: {
     fontSize: 13,
-    color: "#FFFFFF",
+    color: Colors.textPrimary,
     fontWeight: "bold",
   },
-
   arrowIndicator: {
     width: 28,
     height: 28,
@@ -91,18 +100,16 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   arrowText: {
-    color: "#FFFFFF",
+    color: Colors.textPrimary,
     fontSize: 22,
     fontWeight: "bold",
     lineHeight: 26,
   },
-
   divider: {
     height: 1,
     backgroundColor: "rgba(255,255,255,0.25)",
     marginVertical: 10,
   },
-
   locationRow: {
     marginBottom: 12,
   },
@@ -117,7 +124,7 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 12,
-    color: "#FFFFFF",
+    color: Colors.textPrimary,
     flex: 1,
   },
   ctaButton: {
@@ -133,10 +140,21 @@ const styles = StyleSheet.create({
   },
   ctaAceptado: {
     backgroundColor: Colors.primary,
+    borderWidth: 2,
+    borderColor: Colors.textPrimary,
+  },
+  ctaTextAsignado: {
+    color: Colors.primary,
+  },
+  ctaTextAceptado: {
+    color: Colors.textPrimary,
   },
   ctaText: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#FFFFFF",
   },
 });
+function getAddressById(customerId: number) {
+  throw new Error("Function not implemented.");
+}
+

@@ -1,16 +1,23 @@
-// lo que hay que sacar es lo que hay dentro del User.ts
-export interface UserDTO {
-  id: string;
+export type UserDTO = {
+  id: number;
+  email: string;
   firstName: string;
   lastName: string;
-  email: string;
-  phoneNumber: number;
+  phoneNumber: string;
   profileImage: string;
-  AddressDTO: string;
-  warehouseId: string;
+  profileInitial: string;
+  accountBalance: number;
+  address: AddressDTO;
+  warehouseId: number;
   warehouseName: string;
-}
-export interface AddressDTO {
+  roles: string[];
+  deliveryStatus: DeliveryAgentStatus;
+  enabled: boolean;
+};
+
+export type DeliveryAgentStatus = "AT_WAREHOUSE" | "DELIVERING" | "OFFLINE";
+
+export type AddressDTO = {
   id: number;
   street: string;
   streetNumber: string;
@@ -22,4 +29,4 @@ export interface AddressDTO {
   longitude: number;
   additionalInfo: string;
   isDefault: boolean;
-}
+};

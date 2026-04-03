@@ -1,8 +1,8 @@
+import { CARD_WIDTH } from "@/app/constants/width";
 import { SectionProps } from "@/app/types/sectionProps";
 import { Colors } from "@/hooks/colors";
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { OrderCard } from "./OrderCard";
-import { CARD_WIDTH } from "@/app/constants/width";
 
 export function Section({ title, orders, type, onCardPress }: SectionProps) {
   const hasOrders = orders && orders.length > 0;
@@ -37,7 +37,7 @@ export function Section({ title, orders, type, onCardPress }: SectionProps) {
       )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   section: {

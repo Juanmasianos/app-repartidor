@@ -1,7 +1,7 @@
 import { currentApiVersion, ordersMapping } from '@/app/constants/apiConstants';
 import { Order } from '../models/Order';
 import { authService } from './auth-service';
-import { getData, postData, putData } from './data-service';
+import { getData, putData } from './data-service';
 
 export const getOrdersByDeliverer = async () => {
 
@@ -9,7 +9,7 @@ export const getOrdersByDeliverer = async () => {
     const currentUserId = await authService.getUserId();
     const response = await getData(`${currentApiVersion}${ordersMapping}/delivery-agent/${currentUserId}`) as any;
 
-    const orders = Array.isArray(response) ? response : (response?.data || []);
+    const orders = Array.isArray(response) ? response : response.data.data; 
 
     console.log("Pedidos extraídos para la UI:", orders.length);
     return orders as Order[];
@@ -25,7 +25,7 @@ export const getOrdersByDeliverer = async () => {
 export const getOrderById = async (id: string): Promise<Order | null> => {
   try {
     const response = await getData(`${currentApiVersion}${ordersMapping}/${id}`) as any;
-    return response?.data || null;
+    return response?.data.data || null;
   } catch (error) {
     console.error("Error al obtener detalle:", error);
     return null;
@@ -38,6 +38,16 @@ export const acceptOrder = async (orderId: string) => {
     return response;
   } catch (error) {
     console.error("Error al aceptar pedido:", error);
+    throw error;
+  }
+};
+
+export const inTransitOrder = async (orderId: string) => {
+  try {
+    const response = await putData(`${currentApiVersion}${ordersMapping}/${orderId}/confirm-loaded`, {});
+    return response;
+  } catch (error) {
+    console.error("Error al actualizar estado del pedido:", error);
     throw error;
   }
 };
