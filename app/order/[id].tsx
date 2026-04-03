@@ -4,34 +4,47 @@ import { MOCK_ORDERS } from "@/mocks/ordersMock";
 import { productsMocks } from "@/mocks/productsMock";
 import { Order } from "@/models/Order";
 import { Product } from "@/models/product";
-import { deliverOrder, getOrderById } from "@/services/order-service";
+import { deliverOrder, getOrderById, inTransitOrder } from "@/services/order-service";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function OrderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDetail = async () => {
-      if (!id) return;
-      setLoading(true);
-      try {
-        const data = await getOrderById(id);
+  const fetchDetail = async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const data = await getOrderById(id);
 
-        // mock
-        //const data = MOCK_ORDERS.find(o => o.id.toString() === id) || null;
-        setOrder(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+      // mock
+      //const data = MOCK_ORDERS.find(o => o.id.toString() === id) || null;
+      setOrder(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchDetail();
   }, [id]);
+
+  const handleInTransit = async () => {
+    if (!order) return;
+
+    try {
+      await inTransitOrder(order.id.toString());
+      alert("Pedido marcado como en camino");
+      fetchDetail(); 
+    } catch (error) {
+      alert("Error al procesar la entrega");
+    }
+  };
 
   const handleDeliver = async () => {
     if (!order) return;
@@ -39,7 +52,7 @@ export default function OrderScreen() {
     try {
       await deliverOrder(order.id.toString());
       alert("Pedido entregado con éxito");
-      router.back(); 
+      router.back();
     } catch (error) {
       alert("Error al procesar la entrega");
     }
@@ -91,9 +104,15 @@ export default function OrderScreen() {
         </Text>
       </View>
 
-      <Pressable style={styles.ctaButton} onPress={handleDeliver}>
-        <Text style={styles.ctaText}>Marcar como entregado</Text>
-      </Pressable>
+      {order.status === "ACCEPTED" ?
+        <TouchableOpacity style={styles.ctaButtonAccepted} onPress={handleInTransit}>
+          <Text style={styles.ctaText}>Marcar como en camino</Text>
+        </TouchableOpacity>
+        : order.status === "IN_TRANSIT" &&
+        <TouchableOpacity style={styles.ctaButtonDeliver} onPress={handleDeliver}>
+          <Text style={styles.ctaText}>Marcar como entregado</Text>
+        </TouchableOpacity>
+      }
 
       <View style={{ height: 20 }} />
     </View>
@@ -147,7 +166,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#222",
     flex: 1,
-    
+
   },
   infoValue: {
     fontSize: 15,
@@ -169,15 +188,25 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
   },
-  ctaButton: {
+  ctaButtonAccepted: {
     borderRadius: 30,
     paddingVertical: 12,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: Colors.secondary,
+    marginHorizontal: 50,
+  },
+  ctaButtonDeliver: {
+    borderRadius: 30,
+    paddingVertical: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    marginHorizontal: 50,
   },
   ctaText: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#FFFFFF",
+    color: "#000000",
   },
 });

@@ -1,10 +1,11 @@
+import { Colors } from "@/hooks/colors";
 import { Order } from "@/models/Order";
 import { AddressDTO } from "@/models/User";
-import { getOrderAddress } from "@/services/address-service";
 import { getOrdersByDeliverer } from "@/services/order-service";
+import Feather from "@expo/vector-icons/Feather";
 import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { WebView } from "react-native-webview";
 
 type Coords = { lat: number; lng: number };
@@ -15,15 +16,18 @@ const buildSvgPin = (color: string) =>
   `<circle cx='14' cy='14' r='6' fill='white'/>` +
   `</svg>`;
 
-const buildMarkerJS = (lat: number, lng: number, id: number, info: string) => {
+const buildMarkerJS = (order: Order) => {
+  const addr = order.deliveryAddress;
+  if (!addr || !addr.latitude || !addr.longitude) return "";
+
   return `
-    L.marker([${lat}, ${lng}], {
+    L.marker([${addr.latitude}, ${addr.longitude}], {
       icon: L.divIcon({
         className: '',
         html: \`${buildSvgPin("#16a34a")}\`,
         iconSize: [28, 40], iconAnchor: [14, 40], popupAnchor: [0, -40],
       })
-    }).addTo(map).bindPopup('<b>Pedido ${id}</b><br/>${info}');
+    }).addTo(map).bindPopup('<b>Pedido #${order.orderNumber}</b><br/>${addr.street} ${addr.streetNumber}, ${addr.city}');
   `;
 };
 
@@ -64,56 +68,40 @@ export default function MapScreen() {
   const [markersHtml, setMarkersHtml] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        // 1. Obtener ubicación GPS
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        let currentLoc = { lat: 28.4636, lng: -16.2518 };
-        if (status === "granted") {
-          const loc = await Location.getCurrentPositionAsync({});
-          currentLoc = { lat: loc.coords.latitude, lng: loc.coords.longitude };
-        }
-        setLocation(currentLoc);
+  const initMap = async () => {
+    setLoading(true);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      let currentLoc = { lat: 28.4636, lng: -16.2518 };
 
-        // 2. Obtener pedidos del repartidor
-        const orders = await getOrdersByDeliverer();
-        
-        // 3. Cruce de datos: Por cada pedido, buscar dirección del cliente
-        const markersArray = await Promise.all(
-          orders.map(async (order) => {
-            const address = await getOrderAddress(order.customerId);
-            if (address && address.latitude && address.longitude) {
-              return buildMarkerJS(
-                address.latitude, 
-                address.longitude, 
-                order.id, 
-                `${address.street} ${address.streetNumber}`
-              );
-            }
-            return "";
-          })
-        );
-
-        setMarkersHtml(markersArray.join("\n"));
-      } catch (error) {
-        console.error("Error cargando mapa:", error);
-      } finally {
-        setLoading(false);
+      if (status === "granted") {
+        const loc = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.Balanced,
+        });
+        currentLoc = { lat: loc.coords.latitude, lng: loc.coords.longitude };
       }
-    };
+      setLocation(currentLoc);
 
-    loadData();
+      const orders = await getOrdersByDeliverer();
+
+      const markersJS = orders
+        .filter(o => o.status === 'ACCEPTED')
+        .map(order => buildMarkerJS(order))
+        .join("\n");
+
+      setMarkersHtml(markersJS);
+    } catch (error) {
+      console.error("Error en mapa:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    initMap();
   }, []);
 
-  if (loading || !location) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0A8F3E" />
-        <Text>Cargando mapa y pedidos...</Text>
-      </View>
-    );
-  }
+  if (loading || !location) return <ActivityIndicator size="large" color="#0A8F3E" style={{ flex: 1 }} />;
 
   return (
     <View style={styles.container}>
@@ -127,6 +115,16 @@ export default function MapScreen() {
         source={{ html: buildMapHtml(location, markersHtml) }}
         javaScriptEnabled
       />
+
+      <View style={styles.refreshContainer}>
+        <TouchableOpacity
+          style={styles.refreshButton}
+          onPress={() => { initMap(); }} // La función que recarga pedidos y ubicación
+          activeOpacity={0.7}
+        >
+          <Feather name="refresh-cw" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.legend}>
         {LEGEND_ITEMS.map(({ color, label }) => (
@@ -200,4 +198,15 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#374151",
   },
+  refreshContainer: {
+    flexDirection: "row",
+  },
+  refreshButton: {
+    marginTop: 25,
+    marginRight: 30,
+    backgroundColor: Colors.primary,
+    padding: 20,
+    borderRadius: 40,
+    marginLeft: 150,
+  }
 });

@@ -2,29 +2,12 @@ import { CARD_WIDTH } from "@/app/constants/width";
 import { OrderCardProps } from "@/app/types/OrderCardProps";
 import { Colors } from "@/hooks/colors";
 import { AddressDTO } from "@/models/User";
-import { getOrderAddress } from "@/services/address-service";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export function OrderCard({ order, type, onPress }: OrderCardProps) {
   const isAsignado = type === "asignado";
-
-  const [customerAddress, setCustomerAddress] = useState<AddressDTO | null>(null);
-
-  useEffect(() => {
-    const fetchAddress = async () => {
-      try {
-        const address = await getOrderAddress(order.customerId);
-        setCustomerAddress(address);
-      } catch (error) {
-        console.error("Error fetching customer address:", error);
-      }
-    };
-
-    fetchAddress();
-  }, [order.customerId]);
-
 
   return (
     <View style={[styles.card, { width: CARD_WIDTH }]}>
@@ -49,7 +32,7 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
         <Text style={styles.fieldLabel}>Ubicacion</Text>
         <View style={styles.locationValueRow}>
           <Text style={styles.locationText} numberOfLines={1}>
-            {order.deliveryAddressId}
+            {order.deliveryAddress.street} {order.deliveryAddress.streetNumber}, {order.deliveryAddress.city}
           </Text>
         </View>
       </View>

@@ -42,6 +42,16 @@ export const acceptOrder = async (orderId: string) => {
   }
 };
 
+export const inTransitOrder = async (orderId: string) => {
+  try {
+    const response = await putData(`${currentApiVersion}${ordersMapping}/${orderId}/confirm-loaded`, {});
+    return response;
+  } catch (error) {
+    console.error("Error al actualizar estado del pedido:", error);
+    throw error;
+  }
+};
+
 export const deliverOrder = async (orderId: string) => {
   try {
     const response = await putData(`${currentApiVersion}${ordersMapping}/${orderId}/deliver`, {});

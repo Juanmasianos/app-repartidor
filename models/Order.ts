@@ -1,3 +1,5 @@
+import { AddressDTO } from "./User";
+
 export type OrderItemDTO = {
   id: number;
   productId: number;
@@ -22,7 +24,7 @@ export type Order = {
   items: OrderItemDTO[]; 
   deliveryAgentId: number;
   deliveryAgentName: string;
-  deliveryAddressId: number;
+  deliveryAddress: AddressDTO;
   estimatedDeliveryTime: string;
   actualDeliveryTime?: string; 
   paymentMethod: string;
