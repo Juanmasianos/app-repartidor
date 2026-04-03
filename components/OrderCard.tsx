@@ -27,10 +27,10 @@ export function OrderCard({ order, type, onPress }: OrderCardProps) {
 
       {/* Location */}
       <View style={styles.locationRow}>
-        <Text style={styles.fieldLabel}>Ubicacion</Text>
+        <Text style={styles.fieldLabel}>Direccion completa</Text>
         <View style={styles.locationValueRow}>
-          <Text style={styles.locationText} numberOfLines={1}>
-            {order.ubicacion}
+          <Text style={styles.locationText} numberOfLines={2}>
+            {order.direccionCompleta || order.ubicacion}
           </Text>
         </View>
       </View>
