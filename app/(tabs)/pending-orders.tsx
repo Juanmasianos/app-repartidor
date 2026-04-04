@@ -83,7 +83,7 @@ export default function PendingOrdersScreen() {
         />
         <Section
           title="Pedidos Aceptados"
-          orders={orders.filter((order: Order) => order.status === "ACCEPTED")}
+          orders={orders.filter((order: Order) => order.status === "ACCEPTED" || order.status === "IN_TRANSIT")}
           type="aceptado"
           onCardPress={handleCardPress}
         />

@@ -78,7 +78,7 @@ export default function ProfileScreen() {
             resizeMode="contain"
           />
           <Text style={styles.greeting}>
-            {user ? `¡Hola, ${user.firstName}!` : "¡Aquí tienes tu espacio!"}
+            ¡Hola, {user.firstName}!, ¡Aquí tienes tu espacio!
           </Text>
         </View>
 
@@ -102,12 +102,6 @@ export default function ProfileScreen() {
 
         {/* Botones */}
         <View style={styles.separation}>
-          <TouchableOpacity
-            style={styles.buttonOne}
-            onPress={() => router.replace("/(tabs)/pending-orders" as any)}
-          >
-            <Text style={styles.buttonText}>Editar información</Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonTwo}
             onPress={() => router.replace("/(tabs)/pending-orders" as any)}

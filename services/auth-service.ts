@@ -1,3 +1,4 @@
+import { UserDTO } from "@/models/User";
 import * as SecureStore from "expo-secure-store";
 
 const TOKEN_KEY = "user_session_token";
@@ -22,7 +23,7 @@ export const authService = {
   getUserId: async () => {
     return await SecureStore.getItemAsync(ID_KEY);
   },
-  saveUserData: async (data: object) => {
+  saveUserData: async (data: UserDTO) => {
     await SecureStore.setItemAsync(USER_KEY, JSON.stringify(data));
   },
   getUserData: async () => {

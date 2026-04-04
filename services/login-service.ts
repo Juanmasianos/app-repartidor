@@ -15,13 +15,7 @@ export const login = async (email: string, password: string) => {
       if (userId) {
         await authService.saveUserId(userId.toString());
       }
-      await authService.saveUserData({
-        id: response.data?.id,
-        email: response.data?.email,
-        firstName: response.data?.firstName,
-        lastName: response.data?.lastName,
-        roles: response.data?.roles,
-      });
+      await authService.saveUserData(response.data);
       return true;
     }
     console.error("Login exitoso en API pero sin token en la respuesta");

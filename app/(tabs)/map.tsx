@@ -85,7 +85,7 @@ export default function MapScreen() {
       const orders = await getOrdersByDeliverer();
 
       const markersJS = orders
-        .filter(o => o.status === 'ACCEPTED')
+        .filter(o => o.status === 'ACCEPTED' || o.status === 'IN_TRANSIT')
         .map(order => buildMarkerJS(order))
         .join("\n");
 

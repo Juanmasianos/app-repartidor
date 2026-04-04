@@ -2,7 +2,7 @@ import axios from "axios";
 import { router } from "expo-router";
 import { authService } from "../services/auth-service";
 
-const BASE_URL = "http://192.168.1.132:8080/";
+const BASE_URL = "http://192.168.1.137:8080/";
 const api = axios.create({
   baseURL: BASE_URL,
   timeout: 15000,
