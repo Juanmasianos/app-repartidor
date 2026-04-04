@@ -1,3 +1,4 @@
+// quitar la pantalla de usuarios, que muestre los datos de perfil de usuarios
 import { UserSection } from "@/components/UserSection";
 import { Colors } from "@/hooks/colors";
 import { UserDTO } from "@/models/User";
