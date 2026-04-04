@@ -1,7 +1,5 @@
 import { Colors } from "@/hooks/colors";
-import { UserDTO } from "@/models/User";
 import { authService } from "@/services/auth-service";
-import { userService } from "@/services/user-service";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -16,19 +14,18 @@ import {
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const [user, setUser] = useState<UserDTO | null>(null);
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async () => {
     setLoading(true);
     try {
-      const userId = await authService.getUserId();
-      if (!userId) {
+      const userData = await authService.getUserData();
+      if (!userData) {
         router.replace("/(auth)/login");
         return;
       }
-      const data = await userService.getUserById(userId);
-      setUser(data);
+      setUser(userData);
     } catch (error) {
       console.error("Error cargando perfil:", error);
     } finally {
@@ -93,26 +90,14 @@ export default function ProfileScreen() {
           <Text style={styles.value}>{user?.lastName ?? "-"}</Text>
         </View>
 
-        {/* Email y ubicación */}
+        {/* Email y rol */}
         <View style={styles.infoBlock}>
           <Text style={styles.label}>Email:</Text>
           <Text style={styles.value}>{user?.email ?? "-"}</Text>
-          <Text style={styles.label}>Teléfono:</Text>
-          <Text style={styles.value}>{user?.phoneNumber ?? "-"}</Text>
-          <Text style={styles.label}>Almacén:</Text>
-          <Text style={styles.value}>{user?.warehouseName ?? "-"}</Text>
-          {user?.address && (
-            <>
-              <Text style={styles.label}>Dirección:</Text>
-              <Text style={styles.value}>
-                {user.address.street} {user.address.streetNumber}
-                {user.address.apartment ? `, ${user.address.apartment}` : ""}
-                {"\n"}
-                {user.address.city}, {user.address.province}{" "}
-                {user.address.postalCode}
-              </Text>
-            </>
-          )}
+          <Text style={styles.label}>Rol:</Text>
+          <Text style={styles.value}>
+            {user?.roles?.length > 0 ? user.roles.join(", ") : "-"}
+          </Text>
         </View>
 
         {/* Botones */}
@@ -186,7 +171,6 @@ const styles = StyleSheet.create({
   infoBlock: {
     paddingTop: 16,
     paddingHorizontal: 4,
-    gap: 2,
   },
   label: {
     fontSize: 15,
