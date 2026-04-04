@@ -94,10 +94,10 @@ export default function ProfileScreen() {
         <View style={styles.infoBlock}>
           <Text style={styles.label}>Email:</Text>
           <Text style={styles.value}>{user?.email ?? "-"}</Text>
-          <Text style={styles.label}>Rol:</Text>
+          {/* <Text style={styles.label}>Rol:</Text>
           <Text style={styles.value}>
             {user?.roles?.length > 0 ? user.roles.join(", ") : "-"}
-          </Text>
+          </Text> */}
         </View>
 
         {/* Botones */}
