@@ -1,15 +1,22 @@
 import { CARD_WIDTH } from "@/app/constants/width";
-import { SectionProps } from "@/app/types/sectionProps";
 import { Colors } from "@/hooks/colors";
+import { UserDTO } from "@/models/User";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { OrderCard } from "./OrderCard";
+import { UserCard } from "./UserCard";
 
-export function Section({ title, orders, type, onCardPress }: SectionProps) {
-  const hasOrders = orders && orders.length > 0;
+type UserSectionProps = {
+  title: string;
+  data: UserDTO[];
+  onCardPress: (user: UserDTO) => void;
+};
+
+export function UserSection({ title, data, onCardPress }: UserSectionProps) {
+  const hasUsers = data && data.length > 0;
+
   return (
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>{title}</Text>
-      {hasOrders ? (
+      {hasUsers ? (
         <ScrollView
           horizontal
           pagingEnabled
@@ -18,21 +25,13 @@ export function Section({ title, orders, type, onCardPress }: SectionProps) {
           snapToInterval={CARD_WIDTH + 12}
           decelerationRate="fast"
         >
-          {orders.map((order) => (
-            <OrderCard
-              key={order.id}
-              order={order}
-              type={type}
-              onPress={onCardPress}
-            />
+          {data.map((user) => (
+            <UserCard key={user.id} user={user} onPress={onCardPress} />
           ))}
         </ScrollView>
       ) : (
-        /* ── Mensaje cuando la lista está vacía ── */
         <View style={styles.emptyCard}>
-          <Text style={styles.emptyText}>
-            No hay pedidos {type === "asignado" ? "asignados" : "aceptados"}
-          </Text>
+          <Text style={styles.emptyText}>No hay usuarios disponibles</Text>
         </View>
       )}
     </View>
@@ -75,4 +74,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontStyle: "italic",
   },
-})
+});

@@ -1,118 +1,72 @@
 import ProductLine from "@/components/ProductLine";
+import { Colors } from "@/hooks/colors";
+import { MOCK_ORDERS } from "@/mocks/ordersMock";
+import { productsMocks } from "@/mocks/productsMock";
+import { Order } from "@/models/Order";
 import { Product } from "@/models/product";
-import { useLocalSearchParams } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import { getDeliveryOrderById } from "@/services/deliveryApi";
+import { deliverOrder, getOrderById, inTransitOrder } from "@/services/order-service";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function OrderScreen() {
-  const { id } = useLocalSearchParams();
-  const orderId = Array.isArray(id) ? id[0] : id;
-  const [pedido, setPedido] = useState<{
-    id: string;
-    orderNumber?: string;
-    fechaEntrega: string;
-    ubicacion: string;
-    direccionCompleta?: string;
-    status?: string;
-    totalPrice?: number;
-    items?: Array<{
-      id: number;
-      productId: number;
-      productName: string;
-      quantity: number;
-      unitPrice: number;
-      subtotal: number;
-    }>;
-  } | null>(null);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+
+  const fetchDetail = async () => {
+    if (!id) return;
+    setLoading(true);
+    try {
+      const data = await getOrderById(id);
+
+      // mock
+      //const data = MOCK_ORDERS.find(o => o.id.toString() === id) || null;
+      setOrder(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
+    fetchDetail();
+  }, [id]);
 
-    const loadOrder = async (): Promise<void> => {
-      if (!orderId) {
-        setError("Pedido no disponible");
-        setLoading(false);
-        return;
-      }
+  const handleInTransit = async () => {
+    if (!order) return;
 
-      try {
-        setLoading(true);
-        setError("");
-        const fetchedOrder = await getDeliveryOrderById(orderId);
+    try {
+      await inTransitOrder(order.id.toString());
+      alert("Pedido marcado como en camino");
+      fetchDetail(); 
+    } catch (error) {
+      alert("Error al procesar la entrega");
+    }
+  };
 
-        if (!isMounted) {
-          return;
-        }
+  const handleDeliver = async () => {
+    if (!order) return;
 
-        setPedido(fetchedOrder);
-      } catch (loadError) {
-        if (!isMounted) {
-          return;
-        }
+    try {
+      await deliverOrder(order.id.toString());
+      alert("Pedido entregado con éxito");
+      router.back();
+    } catch (error) {
+      alert("Error al procesar la entrega");
+    }
+  };
 
-        setError(loadError instanceof Error ? loadError.message : "No se pudo cargar el pedido.");
-      } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
 
-    loadOrder();
 
-    return () => {
-      isMounted = false;
-    };
-  }, [orderId]);
+  if (loading) return <ActivityIndicator size="large" style={{ flex: 1 }} color={Colors.primary} />;
 
-  const items: Product[] = useMemo(() => {
-    return (pedido?.items || []).map((item) => ({
-      id: item.id,
-      name: item.productName,
-      image: "",
-      status: pedido?.status || "",
-      quantity: Number(item.quantity),
-      price: Number(item.unitPrice),
-    }));
-  }, [pedido]);
-
-  const direccion = pedido?.direccionCompleta || pedido?.ubicacion || "Dirección no disponible";
-
-  if (loading) {
-    return (
-      <View style={styles.wrapper}>
-        <View style={styles.header}>
-          <Image
-            source={require("@/assets/images/coplaca.png")}
-            style={styles.headerLogo}
-            resizeMode="contain"
-          />
-        </View>
-        <Text style={styles.loadingText}>Cargando pedido real...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.wrapper}>
-        <View style={styles.header}>
-          <Image
-            source={require("@/assets/images/coplaca.png")}
-            style={styles.headerLogo}
-            resizeMode="contain"
-          />
-        </View>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>
-    );
-  }
+  if (!order) return <View style={styles.wrapper}><Text>No se encontró el pedido</Text></View>;
 
   return (
     <View style={styles.wrapper}>
+      {/* Header */}
       <View style={styles.header}>
         <Image
           source={require("@/assets/images/coplaca.png")}
@@ -120,29 +74,45 @@ export default function OrderScreen() {
           resizeMode="contain"
         />
       </View>
+
       <View style={styles.card}>
+        {/* Info pedido */}
         <View style={styles.infoBox}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>ID Pedido: </Text>
-            <Text style={styles.infoLabel}>Fecha: </Text>
+            <Text style={styles.infoLabel}>Fecha Entrega: </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{pedido?.orderNumber || pedido?.id || orderId}</Text>
-            <Text style={styles.infoLabel}>{pedido?.fechaEntrega || "--/--/----"}</Text>
+            <Text style={styles.infoValue}>{order.orderNumber}</Text>
+            <Text style={styles.infoValue}>
+              {order.estimatedDeliveryTime ? new Date(order.estimatedDeliveryTime).toLocaleDateString() : "N/A"}
+            </Text>
           </View>
-          <Text style={styles.infoAddress}>Dirección: {direccion}</Text>
-          <Text style={styles.infoEstado}>Estado: {pedido?.status || "No disponible"}</Text>
+          <Text style={styles.infoEstado}>Estado: {order.status}</Text>
         </View>
 
         <ScrollView style={styles.scroll} showsVerticalScrollIndicator={true}>
-          {items.length > 0 ? (
-            items.map((item: Product) => <ProductLine key={item.id} item={item} />)
-          ) : (
-            <Text style={styles.emptyItemsText}>Este pedido no tiene productos cargados.</Text>
-          )}
+          {/* Mapeamos los productos que vienen DENTRO del objeto order */}
+          {order.items?.map((item: any) => (
+            <ProductLine key={item.id} item={item} />
+          ))}
         </ScrollView>
-        <Text style={styles.total}>Total pedido: {pedido?.totalPrice?.toFixed(2) || "0.00"} €</Text>
+
+        {/* Total (Calculado o desde la API) */}
+        <Text style={styles.total}>
+          Total pedido: {order.totalPrice ? `${order.totalPrice}€` : "N/A"}
+        </Text>
       </View>
+
+      {order.status === "ACCEPTED" ?
+        <TouchableOpacity style={styles.ctaButtonAccepted} onPress={handleInTransit}>
+          <Text style={styles.ctaText}>Marcar como en camino</Text>
+        </TouchableOpacity>
+        : order.status === "IN_TRANSIT" &&
+        <TouchableOpacity style={styles.ctaButtonDeliver} onPress={handleDeliver}>
+          <Text style={styles.ctaText}>Marcar como entregado</Text>
+        </TouchableOpacity>
+      }
 
       <View style={{ height: 20 }} />
     </View>
@@ -164,6 +134,11 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 4,
   },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#0A8F3E",
+  },
   scroll: {
     flex: 1,
     paddingHorizontal: 16,
@@ -174,7 +149,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginHorizontal: 16,
     marginBottom: 16,
-    minHeight: 450,
+    minHeight: 450
   },
   infoBox: {
     backgroundColor: "#fff",
@@ -184,13 +159,21 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     marginBottom: 8,
   },
   infoLabel: {
     fontSize: 15,
     fontWeight: "bold",
     color: "#222",
+    flex: 1,
+
+  },
+  infoValue: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#222",
+    flex: 1,
+    textAlign: "center",
   },
   infoEstado: {
     fontSize: 15,
@@ -198,37 +181,32 @@ const styles = StyleSheet.create({
     color: "#222",
     textAlign: "center",
   },
-  infoAddress: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#222",
-    textAlign: "left",
-    marginBottom: 8,
-  },
-  loadingText: {
-    textAlign: "center",
-    color: "#0A8F3E",
-    fontWeight: "bold",
-    padding: 24,
-  },
-  errorText: {
-    textAlign: "center",
-    color: "#b00020",
-    fontWeight: "bold",
-    padding: 24,
-  },
-  emptyItemsText: {
-    color: "#fff",
-    textAlign: "center",
-    marginTop: 10,
-    marginBottom: 10,
-    fontWeight: "600",
-  },
   total: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#fff",
     textAlign: "center",
     marginTop: 8,
+  },
+  ctaButtonAccepted: {
+    borderRadius: 30,
+    paddingVertical: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.secondary,
+    marginHorizontal: 50,
+  },
+  ctaButtonDeliver: {
+    borderRadius: 30,
+    paddingVertical: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Colors.primary,
+    marginHorizontal: 50,
+  },
+  ctaText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#000000",
   },
 });

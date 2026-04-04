@@ -1,8 +1,7 @@
-import { Pedido } from "@/models/Order";
-
+import { Order } from "@/models/Order";
 
 export type OrderCardProps = {
-  order: Pedido;
+  order: Order;
   type: "asignado" | "aceptado";
-  onPress: (order: Pedido) => void;
+  onPress: (order: Order, type: string) => void; 
 };

@@ -1,3 +1,4 @@
+import { login } from "@/services/login-service";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -9,37 +10,25 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { loginDeliveryUser } from "@/services/deliveryApi";
 
 export default function LoginScreen() {
   const router = useRouter();
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleLogin = async (): Promise<void> => {
-    setError("");
-
-    if (!loginEmail.trim() || !loginPassword.trim()) {
-      setError("Introduce email y contraseña.");
-      return;
-    }
-
+  const loginFunction = async () => {
     try {
-      setLoading(true);
-      const response = await loginDeliveryUser(loginEmail.trim(), loginPassword);
-
-      if (!response.roles?.includes("DELIVERY")) {
-        setError("Esta app solo admite cuentas de repartidor.");
-        return;
+      const isOk = await login(loginEmail, loginPassword);
+      if (isOk) {
+        router.replace("/(tabs)/pending-orders");
+      } else {
+        alert("Error: El servidor no respondió con un token válido.");
       }
-
-      router.replace("/(tabs)/pending-orders" as any);
-    } catch (loginError) {
-      setError(loginError instanceof Error ? loginError.message : "No se pudo iniciar sesion.");
-    } finally {
-      setLoading(false);
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message ||
+        "Credenciales incorrectas o error de red";
+      alert(msg);
     }
   };
 
@@ -60,7 +49,6 @@ export default function LoginScreen() {
         <View style={styles.card}>
           <Text style={styles.title}>Repartidores</Text>
           <Text style={styles.subtitle}> Iniciar sesión</Text>
-
           <Text style={styles.label}>Email</Text>
           <TextInput
             placeholder="Tu email"
@@ -71,7 +59,6 @@ export default function LoginScreen() {
             keyboardType="email-address"
             autoCapitalize="none"
           />
-
           <Text style={styles.label}>Contraseña</Text>
           <TextInput
             placeholder="*************"
@@ -81,15 +68,8 @@ export default function LoginScreen() {
             placeholderTextColor="#999"
             secureTextEntry
           />
-
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            <Text style={styles.buttonText}>{loading ? "Accediendo..." : "Entrar"}</Text>
+          <TouchableOpacity style={styles.button} onPress={loginFunction}>
+            <Text style={styles.buttonText}>Entrar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -152,12 +132,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
     fontSize: 16,
-  },
-  errorText: {
-    color: "#FFF3B0",
-    marginBottom: 10,
-    fontWeight: "bold",
-    textAlign: "center",
   },
   switchText: {
     textAlign: "center",

@@ -1,67 +1,70 @@
-import { Pedido } from "@/models/Order";
+import { Order } from "@/models/Order";
 
-export const PEDIDOS_ASIGNADOS: Pedido[] = [
+export const MOCK_ORDERS: Order[] = [
   {
-    id: "PED-00123",
-    fechaEntrega: "18/03/2026",
-    ubicacion: "Calle El Sol 12, La Laguna",
-    direccionCompleta: "Calle El Sol 12, 2º A, 38201 La Laguna, Santa Cruz de Tenerife",
-    status: "ASSIGNED",
-    totalPrice: 18.6,
+    id: 1,
+    orderNumber: "ORD-2024-001",
+    customerId: 50,
+    warehouseId: 1,
+    status: 'PENDING', // Aparecerá en "Pedidos Asignados"
+    totalPrice: 45.50,
+    subtotal: 40.00,
+    discount: 0,
+    deliveryFee: 5.50,
+    deliveryAgentId: 10,
+    deliveryAgentName: "Juan Repartidor",
+    deliveryAddressId: 88, // Ojo: tu tipo dice number, no string
+    estimatedDeliveryTime: "2024-05-20T14:30:00",
+    paymentMethod: "CARD",
+    paymentStatus: "PAID",
+    createdAt: "2024-05-20T10:00:00",
+    updatedAt: "2024-05-20T10:05:00",
     items: [
-      { id: 1, productId: 101, productName: "Plátano premium", quantity: 4, unitPrice: 2.3, subtotal: 9.2 },
-      { id: 2, productId: 102, productName: "Piña dulce", quantity: 3, unitPrice: 3.13, subtotal: 9.4 },
-    ],
+      {
+        id: 10,
+        productId: 501,
+        productName: "Caja de Plátanos Canarios",
+        quantity: 2,
+        unitPrice: 15.00,
+        subtotal: 30.00
+      },
+      {
+        id: 11,
+        productId: 502,
+        productName: "Papaya Premium",
+        quantity: 1,
+        unitPrice: 10.00,
+        subtotal: 10.00
+      }
+    ]
   },
   {
-    id: "PED-00124",
-    fechaEntrega: "19/03/2026",
-    ubicacion: "Avda. Trinidad 45, Santa Cruz",
-    direccionCompleta: "Avenida de la Trinidad 45, 3º B, 38001 Santa Cruz de Tenerife",
-    status: "ASSIGNED",
-    totalPrice: 14.95,
+    id: 2,
+    orderNumber: "ORD-2024-002",
+    customerId: 51,
+    warehouseId: 1,
+    status: 'ACCEPTED', // Aparecerá en "Pedidos Aceptados"
+    totalPrice: 25.00,
+    subtotal: 20.00,
+    discount: 0,
+    deliveryFee: 5.00,
+    deliveryAgentId: 10,
+    deliveryAgentName: "Juan Repartidor",
+    deliveryAddressId: 99,
+    estimatedDeliveryTime: "2024-05-20T16:00:00",
+    paymentMethod: "CASH",
+    paymentStatus: "PENDING",
+    createdAt: "2024-05-20T11:00:00",
+    updatedAt: "2024-05-20T11:30:00",
     items: [
-      { id: 3, productId: 103, productName: "Mango canario", quantity: 5, unitPrice: 2.2, subtotal: 11 },
-      { id: 4, productId: 104, productName: "Papaya", quantity: 1, unitPrice: 3.95, subtotal: 3.95 },
-    ],
-  },
-  {
-    id: "PED-00125",
-    fechaEntrega: "20/03/2026",
-    ubicacion: "C/ Heliodoro 8, Puerto de la Cruz",
-    direccionCompleta: "Calle Heliodoro Rodríguez López 8, Bajo, 38400 Puerto de la Cruz, Santa Cruz de Tenerife",
-    status: "IN_TRANSIT",
-    totalPrice: 22.4,
-    items: [
-      { id: 5, productId: 105, productName: "Aguacate", quantity: 4, unitPrice: 2.8, subtotal: 11.2 },
-      { id: 6, productId: 106, productName: "Kiwi", quantity: 3, unitPrice: 3.73, subtotal: 11.19 },
-    ],
-  },
-];
-
-export const PEDIDOS_ACEPTADOS: Pedido[] = [
-  {
-    id: "PED-00119",
-    fechaEntrega: "17/03/2026",
-    ubicacion: "C/ Los Majuelos 3, La Orotava",
-    direccionCompleta: "Calle Los Majuelos 3, 1º D, 38300 La Orotava, Santa Cruz de Tenerife",
-    status: "ACCEPTED",
-    totalPrice: 16.8,
-    items: [
-      { id: 7, productId: 107, productName: "Cereza temprana", quantity: 2, unitPrice: 4.4, subtotal: 8.8 },
-      { id: 8, productId: 108, productName: "Níspero", quantity: 4, unitPrice: 2.0, subtotal: 8 },
-    ],
-  },
-  {
-    id: "PED-00120",
-    fechaEntrega: "17/03/2026",
-    ubicacion: "Pol. Ind. Costa Sur, Granadilla",
-    direccionCompleta: "Polígono Industrial Costa Sur, Nave 14, 38600 Granadilla de Abona, Santa Cruz de Tenerife",
-    status: "ACCEPTED",
-    totalPrice: 19.75,
-    items: [
-      { id: 9, productId: 109, productName: "Mango tommy", quantity: 5, unitPrice: 2.75, subtotal: 13.75 },
-      { id: 10, productId: 110, productName: "Pitaya", quantity: 1, unitPrice: 6, subtotal: 6 },
-    ],
-  },
+      {
+        id: 12,
+        productId: 505,
+        productName: "Aguacate Hass",
+        quantity: 5,
+        unitPrice: 4.00,
+        subtotal: 20.00
+      }
+    ]
+  }
 ];
