@@ -1,50 +1,70 @@
-# Welcome to your Expo app 👋
+# MovilRepartidor
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicación móvil desarrollada con Expo y React Native para repartidores. Permite gestionar entregas, visualizar rutas en mapas y acceder a funcionalidades de ubicación GPS.
 
-## Get started
+## Características Principales
 
-1. Install dependencies
+- Gestión de pedidos y entregas
+- Visualización de los pedidos en mapa
+- Seguimiento de ubicación
+- Navegación intuitiva
 
+## Estructura de la aplicación
+
+- `app/`: pantallas y rutas de la aplicación.
+- `assets/`: recursos estáticos como imágenes e iconos.
+- `client/`: cliente HTTP y configuración de API.
+- `components/`: componentes reutilizables de UI.
+- `docs/`: documentación de usuario y guías.
+- `hooks/`: hooks personalizados.
+- `models/`: modelos de datos y tipos.
+- `services/`: lógica de negocio y llamadas a la API.
+- `app.json`: configuración general de Expo.
+- `package.json`: scripts y dependencias del proyecto.
+
+## Requisitos
+
+- Node.js (versión 18 o superior)
+- npm o Yarn
+- Expo CLI
+
+## Instalación
+
+1. Instala las dependencias:
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Configura la URL de la API en `client/apiClient.ts` (consulta la guía de arranque para detalles).
 
-   ```bash
-   npx expo start
-   ```
+## Ejecución
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+Inicia la aplicación en modo desarrollo:
 ```bash
-npm run reset-project
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Opciones disponibles:
+- Expo Go en dispositivo móvil
+- Emulador Android
+- Simulador iOS
+- Navegador web
 
-## Learn more
+## Guías de usuario
 
-To learn more about developing your project with Expo, look at the following resources:
+- [Guía de Arranque](docs/GUIA_ARRANQUE.md)
+- [Guía de Login](docs/GUIA_LOGIN.md)
+- [Guía de Pedidos](docs/GUIA_PEDIDOS.md)
+- [Guía de Detalle de Pedido](docs/GUIA_DETALLE_PEDIDO.md)
+- [Guía de Mapa](docs/GUIA_MAPA.md)
+- [Guía de Perfil](docs/GUIA_PERFIL.md)
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Guías técnicas
 
-## Join the community
+- [Guía Técnica](docs/GUIA_TECNICA.md)
+- [Guía de Servicios](docs/GUIA_SERVICIOS.md)
 
-Join our community of developers creating universal apps.
+## Más Información
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [Documentación de Expo](https://docs.expo.dev/)
+- [React Native](https://reactnative.dev/)
