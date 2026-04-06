@@ -84,39 +84,6 @@ Aplicación móvil para gestión de entregas desarrollada con **Expo** y **React
 | `npm run lint`          | Ejecuta ESLint para verificar el código        |
 | `npm run reset-project` | Reinicia el proyecto a un estado limpio        |
 
-## 🔄 Flujo de Navegación
-
-```
-┌─────────────────────────────────────────┐
-│         Pantalla Inicial                │
-│      (Verifica autenticación)           │
-└────────────────┬────────────────────────┘
-                 │
-        ┌────────▼────────┐
-        │ ¿Está logueado? │
-        └────────┬────────┘
-                 │
-         ┌───────┴────────┐
-         │                │
-      NO│                │YES
-         │                │
-    ┌────▼──────┐    ┌────▼──────────────────┐
-    │  LOGIN    │    │   TAB NAVIGATOR       │
-    │  (auth)   │    │  ┌──────────────────┐ │
-    └───────────┘    │  │ Pending Orders   │ │
-                     │  ├──────────────────┤ │
-                     │  │ Map              │ │
-                     │  ├──────────────────┤ │
-                     │  │ Profile          │ │
-                     │  └──────────────────┘ │
-                     └────────┬───────────────┘
-                              │
-                     ┌────────▼────────┐
-                     │ Order Details   │
-                     │  (modal/stack)  │
-                     └─────────────────┘
-```
-
 **Flujo de Estados de Pedido:**
 
 ```

@@ -10,10 +10,10 @@ Tarjeta que muestra un resumen compacto de un pedido.
 
 ### Funcionalidades:
 
-- **Vista compacta** del pedido (número, cliente, total)
-- **Indicador de estado** con colores
-- **Navegación** al detalle del pedido
-- **Información esencial**: dirección, fecha estimada
+- Vista compacta del pedido (número, cliente, total)
+- Indicador de estado con colores
+- Navegación al detalle del pedido
+- Información esencial: dirección, fecha estimada
 
 ## 📋 ProductLine.tsx
 
@@ -23,10 +23,10 @@ Componente que representa un producto individual dentro de un pedido.
 
 ### Funcionalidades:
 
-- **Nombre del producto**
-- **Cantidad y precio unitario**
-- **Subtotal calculado**
-- **Formato de moneda** automático
+- Nombre del producto
+- Cantidad y precio unitario
+- Subtotal calculado
+- Formato de moneda automático
 
 ## 👤 UserCard.tsx
 
@@ -36,10 +36,10 @@ Tarjeta para mostrar información de usuario/cliente.
 
 ### Funcionalidades:
 
-- **Nombre completo** del usuario
-- **Información de contacto** (email, teléfono)
-- **Dirección principal**
-- **Avatar o iniciales**
+- Nombre completo del usuario
+- Información de contacto (email, teléfono)
+- Dirección principal
+- Avatar o iniciales
 
 ## 📱 Section.tsx
 
@@ -49,10 +49,10 @@ Componente genérico para agrupar contenido en secciones.
 
 ### Funcionalidades:
 
-- **Título opcional** de sección
-- **Contenedor flexible** para cualquier contenido
-- **Separadores visuales**
-- **Padding consistente**
+- Título opcional de sección
+- Contenedor flexible para cualquier contenido
+- Separadores visuales
+- Padding consistente
 
 ## 👥 UserSection.tsx
 
@@ -62,32 +62,16 @@ Sección especializada para mostrar información detallada de usuario.
 
 ### Funcionalidades:
 
-- **Información completa** del perfil
-- **Lista de direcciones**
-- **Botones de acción** (editar, contactar)
-- **Estadísticas** (si aplica)
+- Información completa del perfil
+- Lista de direcciones
+- Botones de acción (editar, contactar)
+- Estadísticas (si aplica)
 
 ## 🎨 Sistema de Colores
 
-### Hook de Colores (`hooks/colors.ts`)
+Hook de colores personalizado que define la paleta de colores de la aplicación.
 
 **Ver archivo completo:** [hooks/colors.ts](hooks/colors.ts)
-
-### Uso en Componentes:
-
-```typescript
-import { Colors } from "@/hooks/colors";
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: Colors.background,
-    borderColor: Colors.backgroundSecondary,
-  },
-  title: {
-    color: Colors.text,
-  },
-});
-```
 
 ## 📏 Sistema de Layout
 
@@ -97,128 +81,38 @@ const styles = StyleSheet.create({
 
 ### Responsive Design:
 
-- **Flexbox** para layouts adaptativos
-- **Dimensiones porcentuales** donde sea necesario
-- **SafeAreaView** para áreas seguras
-- **Platform.select()** para diferencias iOS/Android
+- Flexbox para layouts adaptativos
+- Dimensiones porcentuales donde sea necesario
+- SafeAreaView para áreas seguras
+- Platform.select() para diferencias iOS/Android
 
 ## 🔄 Estados y Props
 
 ### Estados Comunes:
 
-```typescript
-interface ComponentState {
-  loading: boolean;
-  error: string | null;
-  data: T | null;
-}
-```
+Patrón genérico para el estado de componentes que cargan datos (loading, error, data).
 
 ### Props Pattern:
 
-```typescript
-interface BaseProps {
-  style?: ViewStyle;
-  testID?: string;
-}
-
-interface SpecificComponentProps extends BaseProps {
-  data: DataType;
-  onAction: () => void;
-}
-```
+Herencia de interfaces para props consistentes en todos los componentes (BaseProps con style y testID).
 
 ## ♿ Accesibilidad
 
 ### Atributos ARIA:
 
-- **`accessibilityLabel`**: Descripción del componente
-- **`accessibilityHint`**: Acción que realiza
-- **`accessibilityRole`**: Rol semántico
-
-### Ejemplo:
-
-```typescript
-<TouchableOpacity
-  accessibilityLabel="Ver detalles del pedido"
-  accessibilityHint="Abre la pantalla de detalle del pedido"
-  accessibilityRole="button"
->
-```
+- `accessibilityLabel`: Descripción del componente
+- `accessibilityHint`: Acción que realiza
+- `accessibilityRole`: Rol semántico
 
 ## 🧪 Testing
 
 ### Props de Testing:
 
-```typescript
-testID = "order-card-${order.id}";
-```
+Uso de `testID` para facilitar los tests automatizados.
 
 ### Estructura de Tests:
 
-```typescript
-describe("OrderCard", () => {
-  it("renders order information correctly", () => {
-    // Test implementation
-  });
-
-  it("calls onPress when tapped", () => {
-    // Test implementation
-  });
-});
-```
-
-### Funcionalidades:
-
-- **Filtrado por repartidor**: Solo muestra pedidos asignados al usuario actual
-- **Manejo de errores**: Logging detallado de errores de API
-- **Transformación de datos**: Convierte respuestas de API a objetos Order tipados
-
-## 🌐 data-service.ts
-
-Servicio genérico de peticiones HTTP que centraliza todas las llamadas a la API.
-
-### Métodos Principales:
-
-```typescript
-// GET request
-getData(endpoint: string): Promise<any>
-
-// PUT request
-putData(endpoint: string, data?: any): Promise<any>
-
-// POST request
-postData(endpoint: string, data?: any): Promise<any>
-
-// DELETE request
-deleteData(endpoint: string): Promise<any>
-```
-
-### Funcionalidades:
-
-- **Configuración centralizada** de Axios
-- **Manejo de errores unificado**
-- **Headers automáticos** (autenticación, content-type)
-- **Timeouts configurables**
-
-## 👤 user-service.ts
-
-Servicio para gestión de información del usuario/repartidor.
-
-### Métodos Principales:
-
-```typescript
-// Obtener perfil del usuario
-getUserProfile(): Promise<User>
-
-// Actualizar información del usuario
-updateUserProfile(userData: Partial<User>): Promise<User>
-
-// Obtener direcciones del usuario
-getUserAddresses(): Promise<AddressDTO[]>
-```
-
-### Funcionalidades:
+Tests unitarios con Jest y React Native Testing Library.
 
 - **Perfil completo** del repartidor
 - **Gestión de direcciones** múltiples
